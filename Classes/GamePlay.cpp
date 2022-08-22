@@ -145,24 +145,24 @@ void GamePlay::createShip()
     int d = (visibleSize.width - 14 * k - 15 * TargetSprite::getDanContentWidth())/2;
     for (int i = 0; i < 15; i++)
     {
-        // Sprite
-        sprite2 = Sprite::create(ClassShip_Sprite_Ship);
-        sprite2->setPosition(Vec2(d + sprite2->getContentSize().width/2 + (k + sprite2->getContentSize().width)*i, visibleSize.height * 9 / 10));
-        auto edge3 = PhysicsBody::createBox(sprite2->getContentSize());
-        edge3->setDynamic(false);
-        edge3->setCollisionBitmask(9);
-        edge3->setContactTestBitmask(true);
-        sprite2->setPhysicsBody(edge3);
-        this->addChild(sprite2, 10);
-        auto moveby1 = MoveBy::create(1, Vec2(40, 0));
-        auto moveby2 = MoveBy::create(2, Vec2(-80, 0));
-        auto seq = Sequence::create(moveby1, moveby2, moveby1, nullptr);
-        sprite2->runAction(RepeatForever::create(seq));
+        //// Sprite
+        //sprite2 = Sprite::create(ClassShip_Sprite_Ship);
+        //sprite2->setPosition(Vec2(d + sprite2->getContentSize().width/2 + (k + sprite2->getContentSize().width)*i, visibleSize.height * 9 / 10));
+        //auto edge3 = PhysicsBody::createBox(sprite2->getContentSize());
+        //edge3->setDynamic(false);
+        //edge3->setCollisionBitmask(9);
+        //edge3->setContactTestBitmask(true);
+        //sprite2->setPhysicsBody(edge3);
+        //this->addChild(sprite2, 10);
+        //auto moveby1 = MoveBy::create(1, Vec2(40, 0));
+        //auto moveby2 = MoveBy::create(2, Vec2(-80, 0));
+        //auto seq = Sequence::create(moveby1, moveby2, moveby1, nullptr);
+        //sprite2->runAction(RepeatForever::create(seq));
         
 
         //// sprite quái từ classShip
 
-        /*targetSpriteGame = new TargetSprite();
+        targetSpriteGame = new TargetSprite();
         targetSpriteGame->setPosition(Vec2(d + TargetSprite::getDanContentWidth()/2 + (k + TargetSprite::getDanContentWidth())*i, visibleSize.height * 9 / 10));
         auto edge3 = PhysicsBody::createBox(targetSpriteGame->getContentSize());
         edge3->setDynamic(false);
@@ -174,7 +174,7 @@ void GamePlay::createShip()
         auto moveby1 = MoveBy::create(1, Vec2(40, 0));
         auto moveby2 = MoveBy::create(2, Vec2(-80, 0));
         auto seq = Sequence::create(moveby1, moveby2, moveby1, nullptr);
-        targetSpriteGame->runAction(RepeatForever::create(seq));*/
+        targetSpriteGame->runAction(RepeatForever::create(seq));
     }   
 }
 void GamePlay::createDan()
