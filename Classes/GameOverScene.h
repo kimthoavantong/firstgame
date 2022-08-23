@@ -13,10 +13,19 @@ public:
 
     virtual bool init();
     
-    cocos2d::ui::Button* buttonPlay;
+    cocos2d::ui::Button* buttonResume;
+    cocos2d::ui::Button* buttonRestart;
+    cocos2d::ui::Button* buttonSetting;
+    cocos2d::ui::Button* buttonAbouts;
+    cocos2d::ui::Button* buttonQuit;
 
-    void addSpriteGameOver();
-    void addButtonPlay();
+
+    
+    void addButtonResume();
+    void addButtonRestart();
+    void addButtonAbouts();
+    void addButtonSetting();
+    void addButtonQuit();
 
     // implement the "static create()" method manually
     CREATE_FUNC(GameOver);
