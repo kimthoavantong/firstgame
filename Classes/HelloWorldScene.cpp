@@ -104,6 +104,19 @@ void HelloWorld::addButtonQuick()
     buttonQuick = ui::Button::create(HelloWorld_Sprite_ButtonQuick);
     buttonQuick->setPosition(Vec2(visibleSize.width / 2 + buttonAbout->getContentSize().width * 1.2 + origin.x, origin.y + visibleSize.height / 4));
     this->addChild(buttonQuick, 1);
+    buttonQuick->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
+        {
+            switch (type)
+            {
+            case cocos2d::ui::Widget::TouchEventType::ENDED:
+            {
+                Director::getInstance()->end();
+                break;
+            }
+            default:
+                break;
+            }
+        });
 }
 
 
