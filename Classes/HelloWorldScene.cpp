@@ -3,7 +3,6 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include "Definitions.h"
-#include "GamePlay.h"
 #include "GamePlayScene.h"
 
 
@@ -83,8 +82,7 @@ void HelloWorld::addButtonShop()
             {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
-                auto moveSceneGamePlay = GamePlay::createScene();
-                Director::getInstance()->replaceScene(moveSceneGamePlay);
+               
                 break;
             }
             default:

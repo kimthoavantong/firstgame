@@ -5,10 +5,7 @@
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
-class PlayerSprite;
-class ShipSprite;
-class DanSprite;
-class TargetSprite;
+
 class GamePlayScene : public cocos2d::Scene
 {
 public:

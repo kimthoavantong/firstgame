@@ -5,7 +5,7 @@
 #include "Definitions.h"
 #include "GamePlayScene.h"
 #include "GameOverScene.h"
-#include "HelloWorldScene.h"
+
 
 
 USING_NS_CC;
