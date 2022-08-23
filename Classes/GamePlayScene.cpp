@@ -50,7 +50,7 @@ bool GamePlayScene::init()
     GamePlayScene::createPlayer(); // create sprite player
     GamePlayScene::createButtonBanDan(); // create button nhấn để bắn đạn
     GamePlayScene::createTarget(); // create Sprite target (quái)
-    
+    GamePlayScene::addLvDan(5,6);
 
     // sự kiện keyboard
     auto eventListener = EventListenerKeyboard::create();
@@ -79,7 +79,7 @@ bool GamePlayScene::init()
     /*this->scheduleUpdate();*/ // Nhận update 60/1s
     this->schedule(schedule_selector(GamePlayScene::keyboard),0.01);
     this->schedule(schedule_selector(GamePlayScene::tick), 0.01);
-    
+    this->scheduleUpdate();
     return true;
 }
 // Kiểm tra keyboard được nhấn
@@ -105,6 +105,7 @@ void GamePlayScene::keyboard(float dt)
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     int a = 5;
+    
 
     if (isKeyPressed(EventKeyboard::KeyCode::KEY_D) && spritePlayer->getPositionX() < (visibleSize.width - spritePlayer->getContentSize().width / 2))
     {
@@ -126,7 +127,19 @@ void GamePlayScene::keyboard(float dt)
 //void GamePlayScene::update(float delta) 
 //{
 //    GamePlayScene::keyBoard();
+// 
 //}
+
+
+
+void GamePlayScene::update(float dt)
+{
+    if (check)
+    {
+    GamePlayScene::addLvDan(x1, y1);
+    check = false;
+    }
+}
 
 
 void GamePlayScene::createPlayer()
@@ -227,18 +240,30 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     auto a = contact.getShapeA()->getBody();
     auto b = contact.getShapeB()->getBody();
     
-    if ((a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 3))
+    int k = random(1, 4);
+    if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 3)
     {
-        
+        x1 = b->getPosition().x;
+        y1 = b->getPosition().y;
         diem++;
-        CCLOG("%d", diem);
+        CCLOG("a = 2 %d", diem);
+        if (k == 1)
+        {
+            check = true;
+        }
         this->removeChild(b->getNode(), true);
         this->removeChild(a->getNode(), true);
     }
-    else if ((a->getCollisionBitmask() == 3 && b->getCollisionBitmask() == 2))
+    else if (a->getCollisionBitmask() == 3 && b->getCollisionBitmask() == 2)
     {
+        x1 = a->getPosition().x;
+        y1 = a->getPosition().y;
         diem++;
-        CCLOG("%d", diem);
+        CCLOG("a = 3  %d", diem);
+        if (k == 1)
+        {
+            check = true;
+        }
         this->removeChild(b->getNode(), true);
         this->removeChild(a->getNode(), true);
     }
@@ -253,7 +278,7 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 100) || (a->getCollisionBitmask() == 100 && b->getCollisionBitmask() == 1))
     {
         // gameover
-        dameDan++;
+        dameDan = dameDan + 1;
         if (a->getCollisionBitmask() == 100)
         {
             this->removeChild(a->getNode(), true);
@@ -262,7 +287,6 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
         {
             this->removeChild(b->getNode(), true);
         }
-       
     }
     else
     {
@@ -278,7 +302,13 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
                         a->setCollisionBitmask(a->getCollisionBitmask() - dameDan);
                         if (a->getCollisionBitmask() < 3)
                         {
-                            a->setCollisionBitmask(3);
+                            if (k == 1)
+                            {
+                                check = true;
+                            }
+                            x1 = a->getPosition().x;
+                            y1 = a->getPosition().y;
+                            this->removeChild(a->getNode(), true);
                         }
                         this->removeChild(b->getNode(), true);
                  }
@@ -287,7 +317,13 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
                         b->setCollisionBitmask(b->getCollisionBitmask() - dameDan);
                         if (b->getCollisionBitmask() < 3)
                         {
-                            b->setCollisionBitmask(3);
+                            if (k == 1)
+                            {
+                                check = true;
+                            }
+                            x1 = b->getPosition().x;
+                            y1 = b->getPosition().y;
+                            this->removeChild(b->getNode(), true);
                         }
                         this->removeChild(a->getNode(), true);
                  }
@@ -302,9 +338,7 @@ void GamePlayScene::tick(float dt)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-
-    // 1 biến bool xác nhận Win game ban đầu gán = true;
-    bool isWin = true;
+    bool isWin = true;  // 1 biến bool xác nhận Win game ban đầu gán = true;
 
     // Vector bodies lấy tất cả các bodies của world ( ball, edge, paddle body), về vector bạn nghiên cứu thêm C++ nâng cao nhé, cũng gần giống mảng, và cũng khá giống Stack. Khai báo vector thì như này Vector<Kiểu biến> tên_biến
     Vector<PhysicsBody*> bodies = world->getAllBodies();
@@ -383,6 +417,25 @@ void GamePlayScene::tick(float dt)
             Director::getInstance()->replaceScene(moveGameOver);
         }
     }
+}
+void GamePlayScene::addLvDan(int a, int b)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    CCLOG("%d  %d", a, b);
+
+    spriteLvDan10 = Sprite::create("CloseNormal.png");
+    spriteLvDan10->setPosition(Vec2( a + origin.x, origin.y + b));
+    auto spriteLvDan10Body = PhysicsBody::createBox(spriteLvDan10->getContentSize());
+    spriteLvDan10Body->setDynamic(false);
+    spriteLvDan10Body->setCollisionBitmask(100);
+    spriteLvDan10Body->setContactTestBitmask(true);
+    spriteLvDan10->setPhysicsBody(spriteLvDan10Body);
+    this->addChild(spriteLvDan10, 10);
+    auto moveLvDan = MoveBy::create(6,Vec2(0,- visibleSize.height + origin.y));
+    auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
+    spriteLvDan10->runAction(Sequence::create(moveLvDan, actionMoveDone, NULL));
 }
 
 

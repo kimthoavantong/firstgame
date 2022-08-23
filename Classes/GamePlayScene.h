@@ -21,13 +21,14 @@ public:
     
     cocos2d::Sprite* spritePlayer;
     cocos2d::Sprite* spriteDan;
+    cocos2d::Sprite* spriteLvDan10;
     cocos2d::Sprite* spriteTarget;
 
-
+    void addLvDan(int a, int b);
     /*void keyBoard();*/
     bool isKeyPressed(cocos2d::EventKeyboard::KeyCode);
     // implement the "static create()" method manually
-   /* virtual void update(float delta);*/
+    virtual void update(float delta);
     // implement the "static create()" method manually
     CREATE_FUNC(GamePlayScene);
     void keyboard(float delta);
@@ -42,7 +43,9 @@ public:
     int manchoi = 0;
     int dameDan = 1;
     void tick(float dt);
-
+    int x1;
+    int y1;
+    bool check = false;
 
 private:
     static std::map<cocos2d::EventKeyboard::KeyCode,

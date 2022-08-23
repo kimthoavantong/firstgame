@@ -32,7 +32,7 @@ public:
     CREATE_FUNC(GamePlay);
 
     bool onContactBegin1(cocos2d::PhysicsContact& contact);
-
+    
 
     void createDan();
     void createPlayer();
