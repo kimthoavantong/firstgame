@@ -8,7 +8,13 @@ LOCAL_MODULE_FILENAME := libMyGame
 
 LOCAL_SRC_FILES := $(LOCAL_PATH)/hellocpp/main.cpp \
                    $(LOCAL_PATH)/../../../Classes/AppDelegate.cpp \
-                   $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp
+                   $(LOCAL_PATH)/../../../Classes/HelloWorldScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/ClasDan.cpp \
+                   $(LOCAL_PATH)/../../../Classes/ClassPlayer.cpp \
+                   $(LOCAL_PATH)/../../../Classes/ClassShip.cpp \
+                   $(LOCAL_PATH)/../../../Classes/ClassTarget.cpp \
+                   $(LOCAL_PATH)/../../../Classes/GameOverScene.cpp \
+                   $(LOCAL_PATH)/../../../Classes/GamePlay.cpp
 
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../../Classes
 

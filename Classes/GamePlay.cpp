@@ -198,7 +198,7 @@ void GamePlay::createDan()
 // Remove đạn
 void GamePlay::spriteMoveFinished(Node* sender)
 {
-    // Hàm này có mỗi công việc là loại bỏ Target ( đang là Sprite) ra khỏi layer của game
+    // Hàm này có mỗi công việc là loại bỏ dan ( đang là Sprite) ra khỏi layer của game
     // Ép kiểu Contrỏ Sprite của 1 Node*
     auto sprite = (Sprite*)sender;
     this->removeChild(sprite, true);
@@ -252,10 +252,12 @@ bool GamePlay::onContactBegin1(PhysicsContact& contact)
     else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 9) || (a->getCollisionBitmask() == 9 && b->getCollisionBitmask() == 1))
     {
         // gameover
+        this->unscheduleUpdate();
         auto moveGameOver = GameOver::createScene();
         Director::getInstance()->replaceScene(moveGameOver);
     }
     return true;
 }
+
 
 

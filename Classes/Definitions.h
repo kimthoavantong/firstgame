@@ -17,6 +17,11 @@
 #define GameOver_Sprite_ButtonQuit "buttonQuitGameOver.png"
 
 
+// define file add GamePlayScene
+#define GamePlayScene_Sprite_QuaiShip2 "ship2.png"
+
+
+
 #define ClassPlayer_Sprite_spritePlayer "Human-Fighter1.png"
 
 

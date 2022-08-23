@@ -1,7 +1,7 @@
 
 
-#ifndef __GamePlay_SCENE_H__
-#define __GamePlay_SCENE_H__
+#ifndef __GamePlayScene_SCENE_H__
+#define __GamePlayScene_SCENE_H__
 
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
@@ -9,7 +9,7 @@ class PlayerSprite;
 class ShipSprite;
 class DanSprite;
 class TargetSprite;
-class GamePlay : public cocos2d::Scene
+class GamePlayScene : public cocos2d::Scene
 {
 public:
     static cocos2d::Scene* createScene();
@@ -18,28 +18,31 @@ public:
     
     cocos2d::ui::Button* buttonBanDan;
 
-    PlayerSprite* playerGame;
-    ShipSprite* shipSpriteGame;
-    DanSprite* danSpriteGame;
-    TargetSprite* targetSpriteGame;
-    cocos2d::Sprite* sprite1;
-    cocos2d::Sprite* sprite2;
-    void keyBoard();
+    
+    cocos2d::Sprite* spritePlayer;
+    cocos2d::Sprite* spriteDan;
+    cocos2d::Sprite* spriteTarget;
+
+
+    /*void keyBoard();*/
     bool isKeyPressed(cocos2d::EventKeyboard::KeyCode);
     // implement the "static create()" method manually
-    virtual void update(float delta) override;
+   /* virtual void update(float delta);*/
     // implement the "static create()" method manually
-    CREATE_FUNC(GamePlay);
-
+    CREATE_FUNC(GamePlayScene);
+    void keyboard(float delta);
     bool onContactBegin1(cocos2d::PhysicsContact& contact);
-
 
     void createDan();
     void createPlayer();
-    void createShip();
+    void createTarget();
     void createButtonBanDan();
     void spriteMoveFinished(Node* sender);
-    
+    int diem = 0;
+    int manchoi = 0;
+    int dameDan = 1;
+    void tick(float dt);
+
 
 private:
     static std::map<cocos2d::EventKeyboard::KeyCode,

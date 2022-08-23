@@ -4,6 +4,7 @@
 #include "SimpleAudioEngine.h"
 #include "Definitions.h"
 #include "GamePlay.h"
+#include "GamePlayScene.h"
 
 
 USING_NS_CC;
@@ -59,8 +60,8 @@ void HelloWorld::addButtonPlay()
             {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
-                auto moveSceneGamePlay = GamePlay::createScene();
-                Director::getInstance()->replaceScene(moveSceneGamePlay);
+                auto moveSceneGamePlayScene = GamePlayScene::createScene();
+                Director::getInstance()->replaceScene(moveSceneGamePlayScene);
                 break;
             }
             default:
@@ -76,6 +77,20 @@ void HelloWorld::addButtonShop()
     buttonShop = ui::Button::create(HelloWorld_Sprite_ButtonShop);
     buttonShop->setPosition(Vec2(visibleSize.width / 2 + origin.x, origin.y + visibleSize.height / 2));
     this->addChild(buttonShop, 1);
+    buttonShop->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
+        {
+            switch (type)
+            {
+            case cocos2d::ui::Widget::TouchEventType::ENDED:
+            {
+                auto moveSceneGamePlay = GamePlay::createScene();
+                Director::getInstance()->replaceScene(moveSceneGamePlay);
+                break;
+            }
+            default:
+                break;
+            }
+        });
     
 }
 void HelloWorld::addButtonAbout()

@@ -3,7 +3,7 @@
 #include "HelloWorldScene.h"
 #include "SimpleAudioEngine.h"
 #include "Definitions.h"
-#include "GamePlay.h"
+#include "GamePlayScene.h"
 #include "GameOverScene.h"
 #include "HelloWorldScene.h"
 
@@ -63,8 +63,8 @@ void GameOver::addButtonRestart()
             {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
-                auto moveSceneGamePlay = GamePlay::createScene();
-                Director::getInstance()->replaceScene(moveSceneGamePlay);
+                auto moveSceneGamePlayScene = GamePlayScene::createScene();
+                Director::getInstance()->replaceScene(moveSceneGamePlayScene);
                 break;
             }
             default:
@@ -133,6 +133,8 @@ void GameOver::addButtonQuit()
         });
     this->addChild(buttonQuit, 1);
 }
+
+
 
 
 
