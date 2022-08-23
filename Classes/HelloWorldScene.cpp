@@ -20,11 +20,9 @@ static void problemLoading(const char* filename)
     printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
 }
 
-// on "init" you need to initialize your instance
+
 bool HelloWorld::init()
 {
-    //////////////////////////////
-    // 1. super init first
     if ( !Scene::init() )
     {
         return false;
@@ -32,10 +30,17 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    HelloWorld::addButtonPlay();
-    
-    
+    auto backGround = Sprite::create(HelloWorld_Sprite_BackGround);
+    backGround->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(backGround,-1);
 
+
+
+    HelloWorld::addButtonPlay();
+    HelloWorld::addButtonShop();
+    HelloWorld::addButtonAbout();
+    HelloWorld::addButtonSetting();
+    HelloWorld::addButtonQuick();
 
     
     return true;
@@ -46,7 +51,7 @@ void HelloWorld::addButtonPlay()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     buttonPlay = ui::Button::create(HelloWorld_Sprite_ButtonPlay);
-    buttonPlay->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    buttonPlay->setPosition(Vec2(visibleSize.width / 2 + origin.x,origin.y + visibleSize.height * 3 / 4));
     this->addChild(buttonPlay, 1);
     buttonPlay->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
         {
@@ -62,6 +67,43 @@ void HelloWorld::addButtonPlay()
                 break;
             }
         });
+}
+void HelloWorld::addButtonShop()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    buttonShop = ui::Button::create(HelloWorld_Sprite_ButtonShop);
+    buttonShop->setPosition(Vec2(visibleSize.width / 2 + origin.x, origin.y + visibleSize.height / 2));
+    this->addChild(buttonShop, 1);
+    
+}
+void HelloWorld::addButtonAbout()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    buttonAbout = ui::Button::create(HelloWorld_Sprite_ButtonAbout);
+    buttonAbout->setPosition(Vec2(visibleSize.width / 2 + origin.x, origin.y + visibleSize.height / 4));
+    this->addChild(buttonAbout, 1);
+
+}
+void HelloWorld::addButtonSetting()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    buttonSetting = ui::Button::create(HelloWorld_Sprite_ButtonSetting);
+    buttonSetting->setPosition(Vec2(visibleSize.width / 2 - buttonAbout->getContentSize().width * 1.2 + origin.x, origin.y + visibleSize.height / 4));
+    this->addChild(buttonSetting, 1);
+}
+
+void HelloWorld::addButtonQuick()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    buttonQuick = ui::Button::create(HelloWorld_Sprite_ButtonQuick);
+    buttonQuick->setPosition(Vec2(visibleSize.width / 2 + buttonAbout->getContentSize().width * 1.2 + origin.x, origin.y + visibleSize.height / 4));
+    this->addChild(buttonQuick, 1);
 }
 
 

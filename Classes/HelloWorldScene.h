@@ -14,8 +14,17 @@ public:
     virtual bool init();
     
     cocos2d::ui::Button* buttonPlay;
+    cocos2d::ui::Button* buttonShop;
+    cocos2d::ui::Button* buttonSetting;
+    cocos2d::ui::Button* buttonAbout;
+    cocos2d::ui::Button* buttonQuick;
+
 
     void addButtonPlay();
+    void addButtonShop();
+    void addButtonSetting();
+    void addButtonAbout();
+    void addButtonQuick();
 
     // implement the "static create()" method manually
     CREATE_FUNC(HelloWorld);
