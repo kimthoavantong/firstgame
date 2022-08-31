@@ -10,6 +10,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{bb6c862e-70e9-49d9-81b7-3829a6f50471}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\classSprite">
+      <UniqueIdentifier>{4b2a8b08-f8c8-4bf5-82a6-ba5a2c54097d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -26,6 +29,15 @@
     </ClCompile>
     <ClCompile Include="..\Classes\GamePlayScene.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\classSprite\EnemyObject.cpp">
+      <Filter>src\classSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\classSprite\Ship.cpp">
+      <Filter>src\classSprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\classSprite\ShipLaser.cpp">
+      <Filter>src\classSprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -46,6 +58,18 @@
     </ClInclude>
     <ClInclude Include="..\Classes\GamePlayScene.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\classSprite\Enemy.h">
+      <Filter>src\classSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\classSprite\EnemyObject.h">
+      <Filter>src\classSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\classSprite\Ship.h">
+      <Filter>src\classSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\classSprite\ShipLaser.h">
+      <Filter>src\classSprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

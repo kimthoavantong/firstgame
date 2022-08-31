@@ -6,6 +6,7 @@
 #include "GamePlayScene.h"
 
 
+
 USING_NS_CC;
 
 Scene* HelloWorld::createScene()
@@ -59,7 +60,7 @@ void HelloWorld::addButtonPlay()
             {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
-                auto moveSceneGamePlayScene = GamePlayScene::createScene();
+                auto moveSceneGamePlayScene = GamePlayScene::createPhysicsWorld();
                 Director::getInstance()->replaceScene(moveSceneGamePlayScene);
                 break;
             }

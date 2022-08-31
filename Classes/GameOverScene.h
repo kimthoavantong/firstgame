@@ -9,7 +9,7 @@
 class GameOver : public cocos2d::Scene
 {
 public:
-    static cocos2d::Scene* createScene();
+    static cocos2d::Scene* createScene(int score);
 
     virtual bool init();
     
@@ -18,14 +18,17 @@ public:
     cocos2d::ui::Button* buttonSetting;
     cocos2d::ui::Button* buttonAbouts;
     cocos2d::ui::Button* buttonQuit;
-
-
+    cocos2d::Label* labelScore;
     
+
+
+    void addLabelScore();
     void addButtonResume();
     void addButtonRestart();
     void addButtonAbouts();
     void addButtonSetting();
     void addButtonQuit();
+
 
     // implement the "static create()" method manually
     CREATE_FUNC(GameOver);

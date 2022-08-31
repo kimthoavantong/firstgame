@@ -1,20 +1,20 @@
 #pragma once
 
 // define file add HelloWorldScene
-#define HelloWorld_Sprite_BackGround "backGround.png"
-#define HelloWorld_Sprite_ButtonPlay "buttonPlay.png"
-#define HelloWorld_Sprite_ButtonShop "buttonShop.png"
-#define HelloWorld_Sprite_ButtonSetting "buttonSetting.png"
-#define HelloWorld_Sprite_ButtonQuick "buttonQuick.png"
-#define HelloWorld_Sprite_ButtonAbout "buttonAbouts.png"
+#define HelloWorld_Sprite_BackGround "spritehelloworld/backGround.png"
+#define HelloWorld_Sprite_ButtonPlay "spritehelloworld/buttonPlay.png"
+#define HelloWorld_Sprite_ButtonShop "spritehelloworld/buttonShop.png"
+#define HelloWorld_Sprite_ButtonSetting "spritehelloworld/buttonSetting.png"
+#define HelloWorld_Sprite_ButtonQuick "spritehelloworld/buttonQuick.png"
+#define HelloWorld_Sprite_ButtonAbout "spritehelloworld/buttonAbouts.png"
 
 // define file add GameOverScene
-#define GameOver_Sprite_BackGround "backGroundGameOver.png"
-#define GameOver_Sprite_ButtonResume "buttonResumeGameOver.png"
-#define GameOver_Sprite_ButtonRestart "buttonRestartGameOver.png"
-#define GameOver_Sprite_ButtonSetting "buttonSettingGameOver.png"
-#define GameOver_Sprite_ButtonAbout "buttonAboutsGameOver.png"
-#define GameOver_Sprite_ButtonQuit "buttonQuitGameOver.png"
+#define GameOver_Sprite_BackGround "spritegameover/backGroundGameOver.png"
+#define GameOver_Sprite_ButtonResume "spritegameover/buttonResumeGameOver.png"
+#define GameOver_Sprite_ButtonRestart "spritegameover/buttonRestartGameOver.png"
+#define GameOver_Sprite_ButtonSetting "spritegameover/buttonSettingGameOver.png"
+#define GameOver_Sprite_ButtonAbout "spritegameover/buttonAboutsGameOver.png"
+#define GameOver_Sprite_ButtonQuit "spritegameover/buttonQuitGameOver.png"
 
 
 // define file add GamePlayScene

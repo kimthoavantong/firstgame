@@ -4,31 +4,23 @@
 #include "Definitions.h"
 #include "GamePlayScene.h"
 
+
+using namespace cocos2d;
+using namespace CocosDenshion;
+using namespace experimental;
+using namespace std;
 USING_NS_CC;
 
-Scene* GamePlayScene::createScene()
+Scene* GamePlayScene::createPhysicsWorld()
 {
-    auto scene = Scene::createWithPhysics();
-    scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
-    auto layer = GamePlayScene::create();
-    layer->setPhysicsWorld(scene->getPhysicsWorld());
-    scene->addChild(layer);
+    auto scene = GamePlayScene::create();
     return scene;
 }
 
-// Print useful error message instead of segfaulting when files are not there.
-static void problemLoading(const char* filename)
-{
-    printf("Error while loading: %s\n", filename);
-    printf("Depending on how you compiled you might have to add 'Resources/' in front of filenames in HelloWorldScene.cpp\n");
-}
-
-// on "init" you need to initialize your instance
 bool GamePlayScene::init()
 {
-    //////////////////////////////
-    // 1. super init first
-    if ( !Scene::init() )
+
+    if ( !Scene::initWithPhysics() )
     {
         return false;
     }
@@ -36,21 +28,15 @@ bool GamePlayScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    this->unschedule(schedule_selector(GamePlayScene::keyboard));
-
-    // set physics size = scene
-    auto edgeBody = PhysicsBody::createEdgeBox(visibleSize, PHYSICSBODY_MATERIAL_DEFAULT, false);
-    auto edgeNode = Node::create();
-    edgeNode->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
-    edgeNode->setPhysicsBody(edgeBody);
-    addChild(edgeNode);
-
-    
+  
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("musicBackground.wav", true);
 
     GamePlayScene::createPlayer(); // create sprite player
     GamePlayScene::createButtonBanDan(); // create button nhấn để bắn đạn
-    GamePlayScene::createTarget(); // create Sprite target (quái)
-    GamePlayScene::addLvDan(5,6);
+    GamePlayScene::createEnemyMan1();
+    GamePlayScene::addLabelDiem();
+
+
 
     // sự kiện keyboard
     auto eventListener = EventListenerKeyboard::create();
@@ -76,9 +62,10 @@ bool GamePlayScene::init()
     dispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
     
-    /*this->scheduleUpdate();*/ // Nhận update 60/1s
+
     this->schedule(schedule_selector(GamePlayScene::keyboard),0.01);
-    this->schedule(schedule_selector(GamePlayScene::tick), 0.01);
+     /*this->schedule(schedule_selector(GamePlayScene::tick), 0.01);*/
+    this->schedule(schedule_selector(GamePlayScene::updateMan), 0.02);
     this->scheduleUpdate();
     return true;
 }
@@ -107,29 +94,23 @@ void GamePlayScene::keyboard(float dt)
     int a = 5;
     
 
-    if (isKeyPressed(EventKeyboard::KeyCode::KEY_D) && spritePlayer->getPositionX() < (visibleSize.width - spritePlayer->getContentSize().width / 2))
+    if (isKeyPressed(EventKeyboard::KeyCode::KEY_D) && spriteShip->getPositionX() < (visibleSize.width - spriteShip->shipWidth / 2))
     {
-        spritePlayer->setPosition(Vec2(spritePlayer->getPositionX() + a + origin.x, spritePlayer->getPositionY()));
+        spriteShip->setPosition(Vec2(spriteShip->getPositionX() + a + origin.x, spriteShip->getPositionY()));
     }
-    if (isKeyPressed(EventKeyboard::KeyCode::KEY_A) && spritePlayer->getPositionX() > spritePlayer->getContentSize().width / 2)
+    if (isKeyPressed(EventKeyboard::KeyCode::KEY_A) && spriteShip->getPositionX() > spriteShip->shipWidth / 2)
     {
-        spritePlayer->setPosition(Vec2(spritePlayer->getPositionX() - a + origin.x, spritePlayer->getPositionY()));
+        spriteShip->setPosition(Vec2(spriteShip->getPositionX() - a + origin.x, spriteShip->getPositionY()));
     }
-    if (isKeyPressed(EventKeyboard::KeyCode::KEY_W) && spritePlayer->getPositionY() < (visibleSize.height - spritePlayer->getContentSize().height / 2))
+    if (isKeyPressed(EventKeyboard::KeyCode::KEY_W) && spriteShip->getPositionY() < (visibleSize.height - spriteShip->shipHeight / 2))
     {
-        spritePlayer->setPosition(Vec2(spritePlayer->getPositionX() + origin.x, spritePlayer->getPositionY() + a));
+        spriteShip->setPosition(Vec2(spriteShip->getPositionX() + origin.x, spriteShip->getPositionY() + a));
     }
-    if (isKeyPressed(EventKeyboard::KeyCode::KEY_S) && spritePlayer->getPositionY() > spritePlayer->getContentSize().height / 2)
+    if (isKeyPressed(EventKeyboard::KeyCode::KEY_S) && spriteShip->getPositionY() > spriteShip->shipHeight / 2)
     {
-        spritePlayer->setPosition(Vec2(spritePlayer->getPositionX() + origin.x, spritePlayer->getPositionY() - a));
+        spriteShip->setPosition(Vec2(spriteShip->getPositionX() + origin.x, spriteShip->getPositionY() - a));
     }
 }
-//void GamePlayScene::update(float delta) 
-//{
-//    GamePlayScene::keyBoard();
-// 
-//}
-
 
 
 void GamePlayScene::update(float dt)
@@ -147,14 +128,9 @@ void GamePlayScene::createPlayer()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    spritePlayer = Sprite::create(ClassPlayer_Sprite_spritePlayer);
-    spritePlayer->setPosition(Vec2(visibleSize.width/2,spritePlayer->getContentSize().height));
-    auto spritePlayerBody = PhysicsBody::createBox(spritePlayer->getContentSize());
-    spritePlayerBody->setDynamic(false);
-    spritePlayerBody->setCollisionBitmask(1);
-    spritePlayerBody->setContactTestBitmask(true);
-    spritePlayer->setPhysicsBody(spritePlayerBody);
-    this->addChild(spritePlayer, 10);
+    spriteShip = Ship::create();
+    spriteShip->setPosition(Vec2(visibleSize.width/8,visibleSize.height/2));
+    this->addChild(spriteShip, 10);
 }
 
 
@@ -163,20 +139,14 @@ void GamePlayScene::createDan()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    spriteDan = Sprite::create(ClassDan_Sprite_Dan);
-    spriteDan->setPosition(spritePlayer->getPosition());
-    auto spriteDanBody = PhysicsBody::createBox(spriteDan->getContentSize());
-    spriteDanBody->setDynamic(false);
-    spriteDanBody->setCollisionBitmask(2);
-    spriteDanBody->setContactTestBitmask(true);
-    spriteDan->setPhysicsBody(spriteDanBody);
-    this->addChild(spriteDan, 10);
-    auto movedan = MoveBy::create(2, Vec2(0,  visibleSize.height * 2));
-    auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
-    spriteDan->runAction(Sequence::create(movedan, actionMoveDone, NULL));
+    spriteShipLaser = ShipLaser::create();
+    spriteShipLaser->setPosition(Vec2(spriteShip->getPositionX() + spriteShip->shipWidth/4,
+        spriteShip->getPositionY() - spriteShip->shipHeight/4));
+    this->addChild(spriteShipLaser, 10);
+    
 }
 
-// Remove đạn
+// Remove sprite
 void GamePlayScene::spriteMoveFinished(Node* sender)
 {
     // Hàm này có mỗi công việc là loại bỏ dan ( đang là Sprite) ra khỏi layer của game
@@ -200,7 +170,9 @@ void GamePlayScene::createButtonBanDan()
             {
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
+                spriteShip->checkBanDan = true;
                 GamePlayScene::createDan();
+                SimpleAudioEngine::getInstance()->playEffect("musicBanDan.wav",false);
                 break;
             }
             default:
@@ -208,27 +180,6 @@ void GamePlayScene::createButtonBanDan()
             }
         });
 
-}
-void GamePlayScene::createTarget()
-{
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    
-    spriteTarget = Sprite::create(ClassShip_Sprite_Ship);
-    int kc = spriteTarget->getContentSize().width / 2;
-    int viTriDau = (visibleSize.width - 10 * spriteTarget->getContentSize().width - 9 * kc) / 2 + spriteTarget->getContentSize().width / 2;
-    for (int i = 0; i < 10; i++)
-    {
-        spriteTarget = Sprite::create(ClassShip_Sprite_Ship);
-        spriteTarget->setPosition(Vec2(viTriDau + (kc + spriteTarget->getContentSize().width)*i,visibleSize.height - spriteTarget->getContentSize().height*2));
-        auto spriteTargetBody = PhysicsBody::createBox(spriteTarget->getContentSize());
-        spriteTargetBody->setDynamic(false);
-        spriteTargetBody->setCollisionBitmask(3);
-        spriteTargetBody->setContactTestBitmask(true);
-        spriteTarget->setTag(3);
-        spriteTarget->setPhysicsBody(spriteTargetBody);
-        this->addChild(spriteTarget, 10);
-    }
 }
 
 // xét va chạm
@@ -240,45 +191,99 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     auto a = contact.getShapeA()->getBody();
     auto b = contact.getShapeB()->getBody();
     
-    int k = random(1, 4);
-    if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 3)
+    int k = random(1, 10);
+    if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 30)
     {
-        x1 = b->getPosition().x;
-        y1 = b->getPosition().y;
-        diem++;
-        CCLOG("a = 2 %d", diem);
-        if (k == 1)
+        x1 = b->getNode()->getPosition().x;
+        y1 = b->getNode()->getPosition().y;
+        
+
+        auto enemyBig1 = dynamic_cast<EnemyBig*>(b->getNode());
+        enemyBig1->setHealthEnemy(lvDan);
+        if (enemyBig1->checkDieEnemy == true)
         {
-            check = true;
+            checkMan++;
+            diem+=5;
+            String* teamscore = String::createWithFormat("%i", diem);
+            labelDiem->setString(teamscore->getCString());
+            if (k == 1)
+            {
+                check = true;
+            }
+            enemyBig1->spriteMove();
         }
-        this->removeChild(b->getNode(), true);
+        
         this->removeChild(a->getNode(), true);
+        CCLOG("%d", checkMan);
+        CCLOG("%d", diem);
+
     }
-    else if (a->getCollisionBitmask() == 3 && b->getCollisionBitmask() == 2)
+    else if (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 2)
     {
         x1 = a->getPosition().x;
         y1 = a->getPosition().y;
+        auto enemyBig2 = dynamic_cast<EnemyBig*>(a->getNode());
+        enemyBig2->setHealthEnemy(lvDan);
+        if (enemyBig2->checkDieEnemy == true)
+        {
+            diem+=5;
+            checkMan++;
+
+            String* teamscore = String::createWithFormat("%i", diem);
+            labelDiem->setString(teamscore->getCString());
+
+            if (k == 1)
+            {
+                check = true;
+            }
+            enemyBig2->spriteMove();
+        }
+        this->removeChild(b->getNode(), true);
+        CCLOG("%d", checkMan);
+        CCLOG("%d", diem);
+    }
+    else if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 20)  
+    {
+        checkMan++;
+        x1 = a->getPosition().x;
+        y1 = a->getPosition().y;
         diem++;
-        CCLOG("a = 3  %d", diem);
         if (k == 1)
         {
             check = true;
         }
         this->removeChild(b->getNode(), true);
         this->removeChild(a->getNode(), true);
+        CCLOG("%d", checkMan);
     }
-    else if((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 3) || (a->getCollisionBitmask() == 3 && b->getCollisionBitmask() == 1))
+    else if (a->getCollisionBitmask() == 20 && b->getCollisionBitmask() == 2)
+    {
+        checkMan++;
+        x1 = a->getPosition().x;
+        y1 = a->getPosition().y;
+        diem++;
+        
+        if (k == 1)
+        {
+            check = true;
+        }
+        this->removeChild(b->getNode(), true);
+        this->removeChild(a->getNode(), true);
+        CCLOG("%d", checkMan);
+    }
+    else if((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 30) 
+            || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1)
+            || (a->getCollisionBitmask() == 20 && b->getCollisionBitmask() == 1) 
+            || (a->getCollisionBitmask() == 20 && b->getCollisionBitmask() == 1))
     {
         // gameover
-
-        this->unschedule(schedule_selector(GamePlayScene::keyboard));
-        auto moveGameOver = GameOver::createScene();
+        keys.clear();
+        auto moveGameOver = GameOver::createScene(diem);
         Director::getInstance()->replaceScene(moveGameOver);
     }
     else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 100) || (a->getCollisionBitmask() == 100 && b->getCollisionBitmask() == 1))
     {
-        // gameover
-        dameDan = dameDan + 1;
+        lvDan++;
         if (a->getCollisionBitmask() == 100)
         {
             this->removeChild(a->getNode(), true);
@@ -288,144 +293,16 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
             this->removeChild(b->getNode(), true);
         }
     }
-    else
-    {
-        for (int i = 4; i < 10; i++)
-        {
 
-             if ((a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == i) || (a->getCollisionBitmask() == i && b->getCollisionBitmask() == 2))
-             {
-                diem++;
-                CCLOG("%d", diem);
-                 if (a->getCollisionBitmask() == i)
-                 {
-                        a->setCollisionBitmask(a->getCollisionBitmask() - dameDan);
-                        if (a->getCollisionBitmask() < 3)
-                        {
-                            if (k == 1)
-                            {
-                                check = true;
-                            }
-                            x1 = a->getPosition().x;
-                            y1 = a->getPosition().y;
-                            this->removeChild(a->getNode(), true);
-                        }
-                        this->removeChild(b->getNode(), true);
-                 }
-                 else if (b->getCollisionBitmask() == i)
-                 {
-                        b->setCollisionBitmask(b->getCollisionBitmask() - dameDan);
-                        if (b->getCollisionBitmask() < 3)
-                        {
-                            if (k == 1)
-                            {
-                                check = true;
-                            }
-                            x1 = b->getPosition().x;
-                            y1 = b->getPosition().y;
-                            this->removeChild(b->getNode(), true);
-                        }
-                        this->removeChild(a->getNode(), true);
-                 }
-             }
-        }
-    }
-      
     return true;
 }
-void GamePlayScene::tick(float dt)
-{
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    bool isWin = true;  // 1 biến bool xác nhận Win game ban đầu gán = true;
-
-    // Vector bodies lấy tất cả các bodies của world ( ball, edge, paddle body), về vector bạn nghiên cứu thêm C++ nâng cao nhé, cũng gần giống mảng, và cũng khá giống Stack. Khai báo vector thì như này Vector<Kiểu biến> tên_biến
-    Vector<PhysicsBody*> bodies = world->getAllBodies();
-
-    // Duyệt từng phần tử của vector trên, kiếm tra loại đối tượng = Tag, Bạn nên tìm hiểu lại lệnh for nhé, nó có nhiều biến thể cho từng loại lớp đặc biệt, đọc phần C++ nâng cao phần list, vector, queue,v..
-   // Đừng dập khuôn for chỉ có dạng for( int i=0; i<N; i++) nhé
-
-    for (auto body : bodies) 
-    {
-        for (int i = 3; i < 7; i++)
-        {
-            if (body->getCollisionBitmask() == i)
-            {
-                isWin = false; // Chưa Win
-            }
-        }
-    }
-    // Duyệt hết mà  isWin vẫn ko đổi thì xử lý Win game
-    if (isWin == true)
-    { 
-        manchoi++;
-        if (manchoi == 1)
-        {
-            spriteTarget = Sprite::create(GamePlayScene_Sprite_QuaiShip2);
-            int kc = spriteTarget->getContentSize().width / 2;
-            int viTriDau = (visibleSize.width - 10 * spriteTarget->getContentSize().width - 9 * kc) / 2 + spriteTarget->getContentSize().width / 2;
-            for (int i = 0; i < 10; i++)
-            {
-                spriteTarget = Sprite::create(GamePlayScene_Sprite_QuaiShip2);
-                spriteTarget->setPosition(Vec2(viTriDau + (kc + spriteTarget->getContentSize().width) * i, visibleSize.height - spriteTarget->getContentSize().height * 2));
-                auto spriteTargetBody = PhysicsBody::createBox(spriteTarget->getContentSize());
-                spriteTargetBody->setDynamic(false);
-                spriteTargetBody->setCollisionBitmask(4);
-                spriteTargetBody->setContactTestBitmask(true);
-                spriteTarget->setPhysicsBody(spriteTargetBody);
-                this->addChild(spriteTarget, 10);
-            }
-        }
-        else if (manchoi == 2)
-        {
-            spriteTarget = Sprite::create(ClassShip_Sprite_Ship);
-            int kc = spriteTarget->getContentSize().width / 2;
-            int viTriDau = (visibleSize.width - 10 * spriteTarget->getContentSize().width - 9 * kc) / 2 + spriteTarget->getContentSize().width / 2;
-            for (int i = 0; i < 10; i++)
-            {
-                spriteTarget = Sprite::create(ClassShip_Sprite_Ship);
-                spriteTarget->setPosition(Vec2(viTriDau + (kc + spriteTarget->getContentSize().width) * i, visibleSize.height - spriteTarget->getContentSize().height * 2));
-                auto spriteTargetBody = PhysicsBody::createBox(spriteTarget->getContentSize());
-                spriteTargetBody->setDynamic(false);
-                spriteTargetBody->setCollisionBitmask(5);
-                spriteTargetBody->setContactTestBitmask(true);
-                spriteTarget->setPhysicsBody(spriteTargetBody);
-                this->addChild(spriteTarget, 10);
-            }
-        }
-        else if (manchoi == 3)
-        {
-            spriteTarget = Sprite::create(ClassShip_Sprite_Ship);
-            int kc = spriteTarget->getContentSize().width / 2;
-            int viTriDau = (visibleSize.width - 10 * spriteTarget->getContentSize().width - 9 * kc) / 2 + spriteTarget->getContentSize().width / 2;
-            for (int i = 0; i < 10; i++)
-            {
-                spriteTarget = Sprite::create(ClassShip_Sprite_Ship);
-                spriteTarget->setPosition(Vec2(viTriDau + (kc + spriteTarget->getContentSize().width) * i, visibleSize.height - spriteTarget->getContentSize().height * 2));
-                auto spriteTargetBody = PhysicsBody::createBox(spriteTarget->getContentSize());
-                spriteTargetBody->setDynamic(false);
-                spriteTargetBody->setCollisionBitmask(6);
-                spriteTargetBody->setContactTestBitmask(true);
-                spriteTarget->setPhysicsBody(spriteTargetBody);
-                this->addChild(spriteTarget, 10);
-            }
-        }
-        else
-        {
-            auto moveGameOver = GameOver::createScene();
-            Director::getInstance()->replaceScene(moveGameOver);
-        }
-    }
-}
 void GamePlayScene::addLvDan(int a, int b)
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    CCLOG("%d  %d", a, b);
-
-    spriteLvDan10 = Sprite::create("CloseNormal.png");
+    spriteLvDan10 = Sprite::create("HP_Bonus.png");
     spriteLvDan10->setPosition(Vec2( a + origin.x, origin.y + b));
     auto spriteLvDan10Body = PhysicsBody::createBox(spriteLvDan10->getContentSize());
     spriteLvDan10Body->setDynamic(false);
@@ -433,10 +310,84 @@ void GamePlayScene::addLvDan(int a, int b)
     spriteLvDan10Body->setContactTestBitmask(true);
     spriteLvDan10->setPhysicsBody(spriteLvDan10Body);
     this->addChild(spriteLvDan10, 10);
-    auto moveLvDan = MoveBy::create(6,Vec2(0,- visibleSize.height + origin.y));
+    auto moveLvDan = MoveBy::create(6,Vec2(-visibleSize.width,0));
     auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
     spriteLvDan10->runAction(Sequence::create(moveLvDan, actionMoveDone, NULL));
 }
 
+void GamePlayScene::updateMan(float) // kiểm tra quái còn không
+{
+    if (checkMan == 40)
+    {
+        GamePlayScene::createEnemyMan1();
+        checkMan++;
+    }
+    else if (checkMan == 81)
+    {
+        keys.clear();
+        auto moveWin = GameOver::createScene(diem);
+        Director::getInstance()->replaceScene(moveWin);
+    }
+}
+
+void GamePlayScene::createEnemyMan1()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    for (int j = 1; j < 5; j++)
+    {
+        for (int i = 1; i < 11; i++)
+        {
+            auto enemyBig = EnemyBig::create();
+            enemyBig->setPosition(Vec2(-(visibleSize.width + (visibleSize.width*(11*j-i)/22)),visibleSize.height*10/11));
+            /*enemyBig->setPosition(Vec2(visibleSize.width * (10-j) / 10, visibleSize.height * i / 11));*/
+            addChild(enemyBig, 10);
+            auto moveBy1 = MoveBy::create(15+(10-i)*2/10, Vec2((visibleSize.width + (visibleSize.width * (11 * j - i) / 22)) + visibleSize.width*(10-j)/10, 0));
+            auto moveBydown1 = MoveBy::create(2, Vec2(0, - (visibleSize.width * (11 - i) / 22) ));
+            enemyBig->runAction(Sequence::create(moveBy1,moveBydown1,nullptr));
+        }
+    }  
+}
+void GamePlayScene::addLabelDiem()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    String* teamscore = String::createWithFormat("%i", diem);
+    labelDiem = Label::createWithTTF(teamscore->getCString(),"fonts/arial.ttf",visibleSize.height*0.1);
+ /*   labelDiem->setAnchorPoint(Vec2(0.5 , 0.5));*/
+    labelDiem->setPosition(Vec2(visibleSize.width/2, visibleSize.height * 9 / 10));
+    labelDiem->setColor(Color3B::WHITE);
+    addChild(labelDiem,11);
+}
+
+
+
+
+//void GamePlayScene::tick(float dt)
+//{
+//    auto visibleSize = Director::getInstance()->getVisibleSize();
+//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+//
+//    bool isWin = true;
+//
+//    // Vector bodies lấy tất cả các bodies của world ( ball, edge, paddle body)
+//    //Vector<PhysicsWorld*> bodies = world->getAllBodies();
+//
+//    //for (auto body : bodies) 
+//    //{
+//    //    if (body->getCollisionBitmask() == 20 || body->getCollisionBitmask() == 30)
+//    //    {
+//    //        isWin = false; // Chưa Win
+//    //    }
+//    //}
+//    //// Duyệt hết mà  isWin vẫn ko đổi thì xử lý Win game
+//    //if (isWin == true)
+//    //{ 
+//    //        /*auto moveGameOver = GameOver::createScene();
+//    //        Director::getInstance()->replaceScene(moveGameOver);*/
+//    //}
+//}
 
 
