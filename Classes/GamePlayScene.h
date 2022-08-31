@@ -64,6 +64,8 @@ private:
     
 
     cocos2d::Label* labelDiem;
+    cocos2d::Label* labelhighScore;
+    int iHighScore = 0;
     int diem;
 
     

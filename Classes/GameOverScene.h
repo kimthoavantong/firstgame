@@ -9,7 +9,7 @@
 class GameOver : public cocos2d::Scene
 {
 public:
-    static cocos2d::Scene* createScene(int score);
+    static cocos2d::Scene* createScene(int score,int highScore);
 
     virtual bool init();
     

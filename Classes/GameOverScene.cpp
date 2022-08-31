@@ -12,8 +12,10 @@ using namespace experimental;
 USING_NS_CC;
 
 int scoreOver;
-Scene* GameOver::createScene(int score)
+int highScoreOver;
+Scene* GameOver::createScene(int score,int highScore)
 {
+    highScoreOver = highScore;
     scoreOver = score;
     return GameOver::create();
 }
@@ -137,10 +139,17 @@ void GameOver::addLabelScore()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    String* playScore = String::createWithFormat("%i",scoreOver);
-    labelScore = Label::createWithTTF(playScore->getCString(), "fonts/arial.ttf", visibleSize.height * 0.1);
+    String* playScore = String::createWithFormat("Score %i",scoreOver);
+    labelScore = Label::createWithTTF(playScore->getCString(), "fonts/arial.ttf", visibleSize.height * 0.05);
+    labelScore->setAnchorPoint(Vec2(0.5, 0.5));
     labelScore->setPosition(Vec2(visibleSize.width / 2, visibleSize.height * 3 / 4));
     labelScore->setColor(Color3B::BLACK);
+    this->addChild(labelScore);
+
+    String* playHighScore = String::createWithFormat("%i", highScoreOver);
+    labelScore = Label::createWithTTF(playHighScore->getCString(), "fonts/arial.ttf", visibleSize.height * 0.1);
+    labelScore->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 3 / 4));
+    labelScore->setColor(Color3B::RED);
     this->addChild(labelScore);
 }
 

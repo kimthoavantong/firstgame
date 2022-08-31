@@ -11,6 +11,9 @@ using namespace experimental;
 using namespace std;
 USING_NS_CC;
 
+const char* HIGH_SCORE = "key"; // highscore save in system
+
+
 Scene* GamePlayScene::createPhysicsWorld()
 {
     auto scene = GamePlayScene::create();
@@ -33,9 +36,12 @@ bool GamePlayScene::init()
 
     GamePlayScene::createPlayer(); // create sprite player
     GamePlayScene::createButtonBanDan(); // create button nhấn để bắn đạn
-    GamePlayScene::createEnemyMan1();
-    GamePlayScene::addLabelDiem();
+    GamePlayScene::createEnemyMan1(); // tạo quái
+    GamePlayScene::addLabelDiem(); // tạo các label
 
+    /*auto def = UserDefault::sharedUserDefault();
+    def->setIntegerForKey(HIGH_SCORE, 0);
+    def->flush();*/
 
 
     // sự kiện keyboard
@@ -191,21 +197,35 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     auto a = contact.getShapeA()->getBody();
     auto b = contact.getShapeB()->getBody();
     
-    int k = random(1, 10);
+    int k = random(1, 10); // random vật phẩm
+
+    //xét đạn bắn chết quái
     if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 30)
     {
         x1 = b->getNode()->getPosition().x;
         y1 = b->getNode()->getPosition().y;
-        
-
         auto enemyBig1 = dynamic_cast<EnemyBig*>(b->getNode());
         enemyBig1->setHealthEnemy(lvDan);
         if (enemyBig1->checkDieEnemy == true)
         {
             checkMan++;
-            diem+=5;
+            diem += 5;
+
             String* teamscore = String::createWithFormat("%i", diem);
             labelDiem->setString(teamscore->getCString());
+
+            auto def = UserDefault::sharedUserDefault();
+            iHighScore = def->getIntegerForKey(HIGH_SCORE);
+            if (diem >= iHighScore)
+            {
+                def->setIntegerForKey(HIGH_SCORE, diem);
+                def->flush();
+                iHighScore = diem;
+                String* highScore = String::createWithFormat("%i", iHighScore);
+                labelhighScore->setString(highScore->getCString());
+            }
+            
+            
             if (k == 1)
             {
                 check = true;
@@ -224,13 +244,25 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
         y1 = a->getPosition().y;
         auto enemyBig2 = dynamic_cast<EnemyBig*>(a->getNode());
         enemyBig2->setHealthEnemy(lvDan);
+
+        
         if (enemyBig2->checkDieEnemy == true)
         {
-            diem+=5;
+            diem = diem + 5;
             checkMan++;
-
             String* teamscore = String::createWithFormat("%i", diem);
             labelDiem->setString(teamscore->getCString());
+            auto def = UserDefault::sharedUserDefault();
+            iHighScore = def->getIntegerForKey(HIGH_SCORE);
+            
+            if (diem >= iHighScore)
+            {
+                def->setIntegerForKey(HIGH_SCORE, diem);
+                def->flush();
+                iHighScore = diem;
+                String* highScore = String::createWithFormat("%i", iHighScore);
+                labelhighScore->setString(highScore->getCString());
+            }
 
             if (k == 1)
             {
@@ -242,46 +274,18 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
         CCLOG("%d", checkMan);
         CCLOG("%d", diem);
     }
-    else if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 20)  
-    {
-        checkMan++;
-        x1 = a->getPosition().x;
-        y1 = a->getPosition().y;
-        diem++;
-        if (k == 1)
-        {
-            check = true;
-        }
-        this->removeChild(b->getNode(), true);
-        this->removeChild(a->getNode(), true);
-        CCLOG("%d", checkMan);
-    }
-    else if (a->getCollisionBitmask() == 20 && b->getCollisionBitmask() == 2)
-    {
-        checkMan++;
-        x1 = a->getPosition().x;
-        y1 = a->getPosition().y;
-        diem++;
-        
-        if (k == 1)
-        {
-            check = true;
-        }
-        this->removeChild(b->getNode(), true);
-        this->removeChild(a->getNode(), true);
-        CCLOG("%d", checkMan);
-    }
+    // xét plane va chạm với quái
     else if((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 30) 
-            || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1)
-            || (a->getCollisionBitmask() == 20 && b->getCollisionBitmask() == 1) 
-            || (a->getCollisionBitmask() == 20 && b->getCollisionBitmask() == 1))
+            || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1))
     {
         // gameover
         keys.clear();
-        auto moveGameOver = GameOver::createScene(diem);
+        auto moveGameOver = GameOver::createScene(diem,iHighScore);
         Director::getInstance()->replaceScene(moveGameOver);
     }
-    else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 100) || (a->getCollisionBitmask() == 100 && b->getCollisionBitmask() == 1))
+    // xét plane ăn vật phẩm tăng dame
+    else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 100) 
+        || (a->getCollisionBitmask() == 100 && b->getCollisionBitmask() == 1)) 
     {
         lvDan++;
         if (a->getCollisionBitmask() == 100)
@@ -315,22 +319,22 @@ void GamePlayScene::addLvDan(int a, int b)
     spriteLvDan10->runAction(Sequence::create(moveLvDan, actionMoveDone, NULL));
 }
 
-void GamePlayScene::updateMan(float) // kiểm tra quái còn không
+void GamePlayScene::updateMan(float) // kiểm tra so luong quái còn không
 {
     if (checkMan == 40)
     {
         GamePlayScene::createEnemyMan1();
         checkMan++;
     }
-    else if (checkMan == 81)
+    else if (checkMan == 81)  // win va kết thúc
     {
         keys.clear();
-        auto moveWin = GameOver::createScene(diem);
+        auto moveWin = GameOver::createScene(diem,iHighScore);
         Director::getInstance()->replaceScene(moveWin);
     }
 }
 
-void GamePlayScene::createEnemyMan1()
+void GamePlayScene::createEnemyMan1() // tạo màn chơi 1
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -349,17 +353,25 @@ void GamePlayScene::createEnemyMan1()
         }
     }  
 }
-void GamePlayScene::addLabelDiem()
+void GamePlayScene::addLabelDiem() // tạo các Label
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     String* teamscore = String::createWithFormat("%i", diem);
-    labelDiem = Label::createWithTTF(teamscore->getCString(),"fonts/arial.ttf",visibleSize.height*0.1);
- /*   labelDiem->setAnchorPoint(Vec2(0.5 , 0.5));*/
-    labelDiem->setPosition(Vec2(visibleSize.width/2, visibleSize.height * 9 / 10));
+    labelDiem = Label::createWithTTF(teamscore->getCString(),"fonts/arial.ttf",visibleSize.height*0.05);
+    labelDiem->setPosition(Vec2(visibleSize.width * 0.2, visibleSize.height * 0.9));
     labelDiem->setColor(Color3B::WHITE);
     addChild(labelDiem,11);
+
+    /*Best Score*/
+    auto def = UserDefault::sharedUserDefault();
+    iHighScore = def->getIntegerForKey(HIGH_SCORE);
+    String* highScore = String::createWithFormat("%i", iHighScore);
+    labelhighScore = Label::createWithTTF(highScore->getCString(), "fonts/arial.ttf" , visibleSize.height * 0.1, Size::ZERO, TextHAlignment::LEFT);
+    labelhighScore->setPosition(Vec2(visibleSize.width * 0.1, visibleSize.height * 0.9));
+    labelhighScore->setColor(Color3B::RED);
+    addChild(labelhighScore, 5);
 }
 
 
