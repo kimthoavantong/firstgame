@@ -43,6 +43,19 @@ bool GamePlayScene::init()
     def->setIntegerForKey(HIGH_SCORE, 0);
     def->flush();*/
 
+    iBackGround1 = Sprite::create(BackGround_item_one);
+    iBackGround1->setPosition(Vec2(visibleSize.width * 1.5, visibleSize.height / 2));
+    this->addChild(iBackGround1, -1);
+
+    iBackGround2 = Sprite::create(BackGround_item_two);
+    iBackGround2->setPosition(Vec2(visibleSize.width * 1.2, visibleSize.height / 4));
+    this->addChild(iBackGround2, -1);
+
+    iBackGround3 = Sprite::create(BackGround_item_three);
+    iBackGround3->setPosition(Vec2(visibleSize.width * 1.8, visibleSize.height *0.8));
+    this->addChild(iBackGround3, -1);
+    
+    
 
     // sự kiện keyboard
     auto eventListener = EventListenerKeyboard::create();
@@ -70,7 +83,6 @@ bool GamePlayScene::init()
     
 
     this->schedule(schedule_selector(GamePlayScene::keyboard),0.01);
-     /*this->schedule(schedule_selector(GamePlayScene::tick), 0.01);*/
     this->schedule(schedule_selector(GamePlayScene::updateMan), 0.02);
     this->scheduleUpdate();
     return true;
@@ -115,16 +127,6 @@ void GamePlayScene::keyboard(float dt)
     if (isKeyPressed(EventKeyboard::KeyCode::KEY_S) && spriteShip->getPositionY() > spriteShip->shipHeight / 2)
     {
         spriteShip->setPosition(Vec2(spriteShip->getPositionX() + origin.x, spriteShip->getPositionY() - a));
-    }
-}
-
-
-void GamePlayScene::update(float dt)
-{
-    if (check)
-    {
-    GamePlayScene::addLvDan(x1, y1);
-    check = false;
     }
 }
 
@@ -281,7 +283,7 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
             || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1))
     {
         // gameover
-        keys.clear();
+        keys.clear(); //Kết thúc tất cả các keyboard còn giữ khi kết thúc game
         auto moveGameOver = GameOver::createScene(diem,iHighScore);
         Director::getInstance()->replaceScene(moveGameOver);
     }
@@ -330,7 +332,7 @@ void GamePlayScene::updateMan(float) // kiểm tra so luong quái còn không
     }
     else if (checkMan == 81)  // win va kết thúc
     {
-        keys.clear();
+        keys.clear(); //Kết thúc tất cả các keyboard còn giữ khi kết thúc game
         auto moveWin = GameOver::createScene(diem,iHighScore);
         Director::getInstance()->replaceScene(moveWin);
     }
@@ -346,10 +348,10 @@ void GamePlayScene::createEnemyMan1() // tạo màn chơi 1
         for (int i = 1; i < 11; i++)
         {
             auto enemyBig = EnemyBig::create();
-            enemyBig->setPosition(Vec2(-(visibleSize.width + (visibleSize.width*(11*j-i)/22)),visibleSize.height*10/11));
+            enemyBig->setPosition(Vec2(-(visibleSize.width + (visibleSize.width*(11*j+i)/22)),visibleSize.height*10/11));
             /*enemyBig->setPosition(Vec2(visibleSize.width * (10-j) / 10, visibleSize.height * i / 11));*/
             addChild(enemyBig, 10);
-            auto moveBy1 = MoveBy::create(15+(10-i)*2/10, Vec2((visibleSize.width + (visibleSize.width * (11 * j - i) / 22)) + visibleSize.width*(10-j)/10, 0));
+            auto moveBy1 = MoveBy::create(5+(10 + i + j*8)*0.1, Vec2((visibleSize.width + (visibleSize.width * (11 * j + i) / 22)) + visibleSize.width*(10-j)/10, 0));
             auto moveBydown1 = MoveBy::create(2, Vec2(0, - (visibleSize.width * (11 - i) / 22) ));
             enemyBig->runAction(Sequence::create(moveBy1,moveBydown1,nullptr));
         }
@@ -375,6 +377,40 @@ void GamePlayScene::addLabelDiem() // tạo các Label
     labelhighScore->setColor(Color3B::RED);
     addChild(labelhighScore, 5);
 }
+void GamePlayScene::update(float dt)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    iBackGround1->setPosition(Vec2(iBackGround1->getPositionX() - (0.001 * visibleSize.width), iBackGround1->getPositionY()));
+    iBackGround2->setPosition(Vec2(iBackGround2->getPositionX() - (0.0015 * visibleSize.width), iBackGround2->getPositionY()));
+    iBackGround3->setPosition(Vec2(iBackGround3->getPositionX() - (0.001 * visibleSize.width), iBackGround3->getPositionY()));
+    
+    if (iBackGround1->getPositionX() < - iBackGround1->getContentSize().width)
+    {
+        int ran = random(1, 9);
+        iBackGround1->setPosition(Vec2(visibleSize.width * (1 + ran / 10), visibleSize.height * ran/10));
+    }
+    if (iBackGround2->getPositionX() < -iBackGround2->getContentSize().width)
+    {
+        int ran = random(1, 9);
+        iBackGround2->setPosition(Vec2(visibleSize.width * ran / 10 + visibleSize.width, visibleSize.height * ran / 10));
+    }
+    if (iBackGround3->getPositionX() < -iBackGround3->getContentSize().width)
+    {
+        int ran = random(1, 9);
+        iBackGround3->setPosition(Vec2(visibleSize.width + visibleSize.width * ran / 10, visibleSize.height * ran / 10));
+    }
+
+    if (check)
+    {
+        GamePlayScene::addLvDan(x1, y1);
+        check = false;
+    }
+
+}
+
+
 
 
 

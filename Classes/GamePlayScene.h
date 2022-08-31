@@ -25,17 +25,20 @@ public:
     ShipLaser* spriteShipLaser;
     void updateEnemy(float);
 
-
+    cocos2d::Sprite* iBackGround1;
+    cocos2d::Sprite* iBackGround2;
+    cocos2d::Sprite* iBackGround3;
+    cocos2d::Sprite* iBackGround4;
+    cocos2d::Sprite* iBackGround5;
     cocos2d::Sprite* spriteLvDan10;
     cocos2d::Sprite* spriteTarget;
 
     void addLvDan(int a, int b);
-    /*void keyBoard();*/
     bool isKeyPressed(cocos2d::EventKeyboard::KeyCode);
 
     virtual void update(float delta);
 
-    CREATE_FUNC(GamePlayScene);
+    
     void keyboard(float delta);
     bool onContactBegin1(cocos2d::PhysicsContact& contact);
 
@@ -56,6 +59,8 @@ public:
     int lvDan = 1; // lv cua dan
     
 
+
+    CREATE_FUNC(GamePlayScene);
     /*void tick(float dt);*/
 
 private:

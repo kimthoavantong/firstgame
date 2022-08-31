@@ -20,12 +20,11 @@
 // define file add GamePlayScene
 #define GamePlayScene_Sprite_QuaiShip2 "ship2.png"
 
+// define Background
+#define BackGround_item_one "background/iBackGround1.png"
+#define BackGround_item_two "background/iBackGround2.png"
+#define BackGround_item_three "background/iBackGround3.png"
+#define BackGround_item_four "background/iBackGround4.png"
+#define BackGround_item_five "background/iBackGround5.png"
 
 
-#define ClassPlayer_Sprite_spritePlayer "Human-Fighter1.png"
-
-
-#define ClassShip_Sprite_Ship "ship189.png"
-
-
-#define ClassDan_Sprite_Dan "Human-Dan2.png"
