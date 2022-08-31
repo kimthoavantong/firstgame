@@ -21,10 +21,14 @@
 #define GamePlayScene_Sprite_QuaiShip2 "ship2.png"
 
 // define Background
+#define BackGround_full_one "BackGround2.png"
 #define BackGround_item_one "background/iBackGround1.png"
 #define BackGround_item_two "background/iBackGround2.png"
 #define BackGround_item_three "background/iBackGround3.png"
 #define BackGround_item_four "background/iBackGround4.png"
 #define BackGround_item_five "background/iBackGround5.png"
+
+// font chu
+#define Font_Arial "fonts/arial.ttf"
 
 

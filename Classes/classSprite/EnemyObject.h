@@ -41,10 +41,12 @@ class EnemyBig : public Enemy
 public:
     static EnemyBig* createEnemyBig();
     virtual bool init();
-    Sprite* spriteEnemyBig;
+    cocos2d::Sprite* spriteEnemyBig;
+    cocos2d::Sprite* spriteBom;
     int getHealthEnemy();
     void setHealthEnemy(int );
     void spriteMove();
+    void addBom(float dt);
    
     PhysicsBody* physicsBig;
     void spriteMoveFinished(Node* sender);

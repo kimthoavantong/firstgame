@@ -43,6 +43,14 @@ bool GamePlayScene::init()
     def->setIntegerForKey(HIGH_SCORE, 0);
     def->flush();*/
 
+    backGround1 = Sprite::create(BackGround_full_one);
+    backGround1->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    this->addChild(backGround1, -10);
+
+    backGround2 = Sprite::create(BackGround_full_one);
+    backGround2->setPosition(Vec2(visibleSize.width*1.5, visibleSize.height / 2));
+    this->addChild(backGround2, -10);
+
     iBackGround1 = Sprite::create(BackGround_item_one);
     iBackGround1->setPosition(Vec2(visibleSize.width * 1.5, visibleSize.height / 2));
     this->addChild(iBackGround1, -1);
@@ -55,7 +63,7 @@ bool GamePlayScene::init()
     iBackGround3->setPosition(Vec2(visibleSize.width * 1.8, visibleSize.height *0.8));
     this->addChild(iBackGround3, -1);
     
-    
+
 
     // sự kiện keyboard
     auto eventListener = EventListenerKeyboard::create();
@@ -81,7 +89,7 @@ bool GamePlayScene::init()
     dispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
     
-
+   
     this->schedule(schedule_selector(GamePlayScene::keyboard),0.01);
     this->schedule(schedule_selector(GamePlayScene::updateMan), 0.02);
     this->scheduleUpdate();
@@ -349,13 +357,13 @@ void GamePlayScene::createEnemyMan1() // tạo màn chơi 1
         {
             auto enemyBig = EnemyBig::create();
             enemyBig->setPosition(Vec2(-(visibleSize.width + (visibleSize.width*(11*j+i)/22)),visibleSize.height*10/11));
-            /*enemyBig->setPosition(Vec2(visibleSize.width * (10-j) / 10, visibleSize.height * i / 11));*/
             addChild(enemyBig, 10);
             auto moveBy1 = MoveBy::create(5+(10 + i + j*8)*0.1, Vec2((visibleSize.width + (visibleSize.width * (11 * j + i) / 22)) + visibleSize.width*(10-j)/10, 0));
-            auto moveBydown1 = MoveBy::create(2, Vec2(0, - (visibleSize.width * (11 - i) / 22) ));
+            auto moveBydown1 = MoveBy::create(2-(i+j)*0.1, Vec2(0, -(visibleSize.width * (11 - i) / 22)));
             enemyBig->runAction(Sequence::create(moveBy1,moveBydown1,nullptr));
         }
-    }  
+    } 
+    
 }
 void GamePlayScene::addLabelDiem() // tạo các Label
 {
@@ -363,7 +371,7 @@ void GamePlayScene::addLabelDiem() // tạo các Label
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     String* teamscore = String::createWithFormat("%i", diem);
-    labelDiem = Label::createWithTTF(teamscore->getCString(),"fonts/arial.ttf",visibleSize.height*0.05);
+    labelDiem = Label::createWithTTF(teamscore->getCString(),Font_Arial,visibleSize.height*0.05);
     labelDiem->setPosition(Vec2(visibleSize.width * 0.2, visibleSize.height * 0.9));
     labelDiem->setColor(Color3B::WHITE);
     addChild(labelDiem,11);
@@ -372,7 +380,7 @@ void GamePlayScene::addLabelDiem() // tạo các Label
     auto def = UserDefault::sharedUserDefault();
     iHighScore = def->getIntegerForKey(HIGH_SCORE);
     String* highScore = String::createWithFormat("%i", iHighScore);
-    labelhighScore = Label::createWithTTF(highScore->getCString(), "fonts/arial.ttf" , visibleSize.height * 0.1, Size::ZERO, TextHAlignment::LEFT);
+    labelhighScore = Label::createWithTTF(highScore->getCString(), Font_Arial , visibleSize.height * 0.1, Size::ZERO, TextHAlignment::LEFT);
     labelhighScore->setPosition(Vec2(visibleSize.width * 0.1, visibleSize.height * 0.9));
     labelhighScore->setColor(Color3B::RED);
     addChild(labelhighScore, 5);
@@ -385,23 +393,34 @@ void GamePlayScene::update(float dt)
     iBackGround1->setPosition(Vec2(iBackGround1->getPositionX() - (0.001 * visibleSize.width), iBackGround1->getPositionY()));
     iBackGround2->setPosition(Vec2(iBackGround2->getPositionX() - (0.0015 * visibleSize.width), iBackGround2->getPositionY()));
     iBackGround3->setPosition(Vec2(iBackGround3->getPositionX() - (0.001 * visibleSize.width), iBackGround3->getPositionY()));
-    
+
+    backGround1->setPosition(Vec2(backGround1->getPositionX() - (0.001 * visibleSize.width), backGround1->getPositionY()));
+    backGround2->setPosition(Vec2(backGround2->getPositionX() - (0.001 * visibleSize.width), backGround2->getPositionY()));
+
+
+    if (backGround1->getPositionX() <= - visibleSize.width / 2)
+    {
+        backGround1->setPosition(Vec2(visibleSize.width * 1.5, visibleSize.height / 2));
+    }
+    if (backGround2->getPositionX() <= - visibleSize.width / 2)
+    {
+        backGround2->setPosition(Vec2(visibleSize.width * 1.5, visibleSize.height / 2));
+    }
     if (iBackGround1->getPositionX() < - iBackGround1->getContentSize().width)
     {
-        int ran = random(1, 9);
-        iBackGround1->setPosition(Vec2(visibleSize.width * (1 + ran / 10), visibleSize.height * ran/10));
+        int ran = random(1, 7);
+        iBackGround1->setPosition(Vec2(visibleSize.width * (1 + ran / 8), visibleSize.height * ran/8));
     }
     if (iBackGround2->getPositionX() < -iBackGround2->getContentSize().width)
     {
-        int ran = random(1, 9);
-        iBackGround2->setPosition(Vec2(visibleSize.width * ran / 10 + visibleSize.width, visibleSize.height * ran / 10));
+        int ran = random(1, 7);
+        iBackGround2->setPosition(Vec2(visibleSize.width * ran / 8 + visibleSize.width, visibleSize.height * ran / 8));
     }
     if (iBackGround3->getPositionX() < -iBackGround3->getContentSize().width)
     {
-        int ran = random(1, 9);
-        iBackGround3->setPosition(Vec2(visibleSize.width + visibleSize.width * ran / 10, visibleSize.height * ran / 10));
+        int ran = random(1, 7);
+        iBackGround3->setPosition(Vec2(visibleSize.width + visibleSize.width * ran / 8, visibleSize.height * ran / 8));
     }
-
     if (check)
     {
         GamePlayScene::addLvDan(x1, y1);
@@ -411,33 +430,5 @@ void GamePlayScene::update(float dt)
 }
 
 
-
-
-
-
-//void GamePlayScene::tick(float dt)
-//{
-//    auto visibleSize = Director::getInstance()->getVisibleSize();
-//    Vec2 origin = Director::getInstance()->getVisibleOrigin();
-//
-//    bool isWin = true;
-//
-//    // Vector bodies lấy tất cả các bodies của world ( ball, edge, paddle body)
-//    //Vector<PhysicsWorld*> bodies = world->getAllBodies();
-//
-//    //for (auto body : bodies) 
-//    //{
-//    //    if (body->getCollisionBitmask() == 20 || body->getCollisionBitmask() == 30)
-//    //    {
-//    //        isWin = false; // Chưa Win
-//    //    }
-//    //}
-//    //// Duyệt hết mà  isWin vẫn ko đổi thì xử lý Win game
-//    //if (isWin == true)
-//    //{ 
-//    //        /*auto moveGameOver = GameOver::createScene();
-//    //        Director::getInstance()->replaceScene(moveGameOver);*/
-//    //}
-//}
 
 

@@ -25,6 +25,8 @@ public:
     ShipLaser* spriteShipLaser;
     void updateEnemy(float);
 
+    cocos2d::Sprite* backGround1;
+    cocos2d::Sprite* backGround2;
     cocos2d::Sprite* iBackGround1;
     cocos2d::Sprite* iBackGround2;
     cocos2d::Sprite* iBackGround3;
@@ -74,7 +76,7 @@ private:
     int diem;
 
     
-    PhysicsWorld* world;
+    cocos2d::PhysicsWorld* world;
 
     void setPhysicsWorld(PhysicsWorld* m_world)
     {

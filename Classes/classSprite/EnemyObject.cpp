@@ -83,7 +83,7 @@ bool EnemyBig::init()
 		return false;
 	}
 
-	healthEnemy = 1;
+	healthEnemy = 3;
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("enemybig.plist", "enemybig.png");
 	spriteEnemyBig = Sprite::createWithSpriteFrameName("enemybig1.png");
@@ -109,7 +109,6 @@ bool EnemyBig::init()
 
 	auto moveBig = MoveBy::create(6, Vec2(-2000, 0));
 	auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(EnemyBig::spriteMoveFinished, this));
-	/*this->runAction(Sequence::create(moveBig, actionMoveDone, NULL));*/
 	auto moveBy1 = MoveBy::create(1, Vec2(0, 20));
 	auto moveBy2 = MoveBy::create(2, Vec2(0, -40));
 	auto moveBy3 = MoveBy::create(1, Vec2(0, 20));
@@ -129,7 +128,6 @@ void EnemyBig::setHealthEnemy(int a)
 	if (healthEnemy <= 0)
 	{
 		checkDieEnemy = true;
-		/*this->removeFromParentAndCleanup(true);*/
 	}	
 }
 void EnemyBig::spriteMove()
@@ -139,6 +137,18 @@ void EnemyBig::spriteMove()
 void EnemyBig::spriteMoveFinished(Node* sender)
 {
 	this->removeFromParentAndCleanup(true);
+}
+void EnemyBig::addBom(float dt)
+{
+	int random1 = random(1, 2);
+	if (spriteEnemyBig != nullptr)
+	{
+		if (random1 == 1)
+		{
+			spriteBom = Sprite::create("enemy1.png");
+			this->addChild(spriteBom);
+		}
+	}
 }
 
 

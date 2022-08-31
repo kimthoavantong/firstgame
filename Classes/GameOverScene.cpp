@@ -140,14 +140,14 @@ void GameOver::addLabelScore()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     String* playScore = String::createWithFormat("Score %i",scoreOver);
-    labelScore = Label::createWithTTF(playScore->getCString(), "fonts/arial.ttf", visibleSize.height * 0.05);
+    labelScore = Label::createWithTTF(playScore->getCString(), Font_Arial, visibleSize.height * 0.05);
     labelScore->setAnchorPoint(Vec2(0.5, 0.5));
     labelScore->setPosition(Vec2(visibleSize.width / 2, visibleSize.height * 3 / 4));
     labelScore->setColor(Color3B::BLACK);
     this->addChild(labelScore);
 
     String* playHighScore = String::createWithFormat("%i", highScoreOver);
-    labelScore = Label::createWithTTF(playHighScore->getCString(), "fonts/arial.ttf", visibleSize.height * 0.1);
+    labelScore = Label::createWithTTF(playHighScore->getCString(), Font_Arial, visibleSize.height * 0.1);
     labelScore->setPosition(Vec2(visibleSize.width * 0.75, visibleSize.height * 3 / 4));
     labelScore->setColor(Color3B::RED);
     this->addChild(labelScore);
