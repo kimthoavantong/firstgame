@@ -202,19 +202,21 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     //xét đạn bắn chết quái
     if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 30)
     {
-        x1 = b->getNode()->getPosition().x;
-        y1 = b->getNode()->getPosition().y;
+        
         auto enemyBig1 = dynamic_cast<EnemyBig*>(b->getNode());
         enemyBig1->setHealthEnemy(lvDan);
-        if (enemyBig1->checkDieEnemy == true)
+        if (enemyBig1->checkDieEnemy == true) // quái bị tiêu diệt
         {
-            checkMan++;
+            x1 = b->getNode()->getPosition().x; //  lấy tọa độ khi quái chết để tạo vật phẩm
+            y1 = b->getNode()->getPosition().y;
+
+            checkMan++; // tiêu diệt được 1 quái
             diem += 5;
 
-            String* teamscore = String::createWithFormat("%i", diem);
+            String* teamscore = String::createWithFormat("%i", diem); // add điểm vào label
             labelDiem->setString(teamscore->getCString());
 
-            auto def = UserDefault::sharedUserDefault();
+            auto def = UserDefault::sharedUserDefault(); // xét điểm cao nhất và add vào label
             iHighScore = def->getIntegerForKey(HIGH_SCORE);
             if (diem >= iHighScore)
             {
@@ -225,12 +227,11 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
                 labelhighScore->setString(highScore->getCString());
             }
             
-            
-            if (k == 1)
+            if (k == 1) // nếu random k = 1 thì add vật phẩm
             {
                 check = true;
             }
-            enemyBig1->spriteMove();
+            enemyBig1->spriteMove(); // xóa quái đã chết
         }
         
         this->removeChild(a->getNode(), true);
@@ -240,14 +241,15 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     }
     else if (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 2)
     {
-        x1 = a->getPosition().x;
-        y1 = a->getPosition().y;
-        auto enemyBig2 = dynamic_cast<EnemyBig*>(a->getNode());
-        enemyBig2->setHealthEnemy(lvDan);
-
         
+        auto enemyBig2 = dynamic_cast<EnemyBig*>(a->getNode());
+        enemyBig2->setHealthEnemy(lvDan); // sét máu của quái
+
         if (enemyBig2->checkDieEnemy == true)
         {
+            x1 = a->getPosition().x; // lấy tọa độ khi quái chết để tạo vật phẩm
+            y1 = a->getPosition().y;
+
             diem = diem + 5;
             checkMan++;
             String* teamscore = String::createWithFormat("%i", diem);
@@ -264,7 +266,7 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
                 labelhighScore->setString(highScore->getCString());
             }
 
-            if (k == 1)
+            if (k == 1) // nếu random k = 1 thì add vật phẩm
             {
                 check = true;
             }
