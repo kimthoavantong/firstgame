@@ -22,7 +22,8 @@ public:
 
 
     Ship* spriteShip;
-    ShipLaser* spriteShipLaser;
+    ShipLaser* spriteShipLaser1;
+    ShipLaser* spriteShipLaser2;
     void updateEnemy(float);
 
     cocos2d::Sprite* backGround1;
@@ -54,12 +55,12 @@ public:
     int checkMan = 0 ;
     void createEnemyMan1();
     void createEnemyMan2();
-    void updateMan(float);
+
 
     int x1; int y1; // tọa độ add phần quà khi quái chết
     bool check = false; // check để add qua
-    int lvDan = 1; // lv cua dan
-    
+    int lvDan;
+    int mang;
 
 
     CREATE_FUNC(GamePlayScene);
@@ -74,7 +75,7 @@ private:
     cocos2d::Label* labelhighScore;
     int iHighScore = 0;
     int diem;
-
+    
     
     cocos2d::PhysicsWorld* world;
 

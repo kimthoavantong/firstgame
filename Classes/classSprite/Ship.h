@@ -28,6 +28,7 @@ public:
     PhysicsBody* physicsShip;
     CREATE_FUNC(Ship);
     int healthShip = 5;
+    void moveToto();
 private:
     
     

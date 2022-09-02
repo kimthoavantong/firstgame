@@ -20,15 +20,12 @@ bool Ship::init()
     checkBanDan = false;
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("spriteplane/plane.plist","spriteplane/plane.png");
     spriteShip = Sprite::createWithSpriteFrameName("Fly1.png");
-    //this->schedule(schedule_selector(Ship::animatePlaneFly), 0.1);
     shipWidth = spriteShip->getContentSize().width;
     shipHeight = spriteShip->getContentSize().height;
     this->addChild(spriteShip);
     Ship::animatePlaneFly(0.1);
-
     
     
-
     physicsShip = PhysicsBody::createBox(spriteShip->getContentSize());
     physicsShip->setDynamic(false);
     physicsShip->setCollisionBitmask(1);
@@ -36,7 +33,7 @@ bool Ship::init()
     this->addComponent(physicsShip);
    
     this->schedule(schedule_selector(Ship::animateBanDan), 0.1);
-    
+    Ship::moveToto();
 
     return true;
 }
@@ -67,7 +64,6 @@ void Ship::animateBanDan(float)
         checkBanDan = false;
     }
 }
-
 void Ship::animatePlaneFly(float dt)
 {
     Vector <SpriteFrame*> aniFrameShip;
@@ -78,5 +74,9 @@ void Ship::animatePlaneFly(float dt)
     auto animateShip = Animate::create(animationShip);
     spriteShip->runAction(RepeatForever::create(animateShip));
 }
-
+void Ship::moveToto()
+{
+    auto moveToto = MoveTo::create(2, Vec2(600, 0));
+    this->runAction(moveToto);
+}
 
