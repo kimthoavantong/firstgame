@@ -20,13 +20,10 @@ bool Ship::init()
     checkBanDan = false;
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("spriteplane/plane.plist","spriteplane/plane.png");
     spriteShip = Sprite::createWithSpriteFrameName("Fly1.png");
-    //this->schedule(schedule_selector(Ship::animatePlaneFly), 0.1);
     shipWidth = spriteShip->getContentSize().width;
     shipHeight = spriteShip->getContentSize().height;
     this->addChild(spriteShip);
     Ship::animatePlaneFly(0.1);
-
-    
     
 
     physicsShip = PhysicsBody::createBox(spriteShip->getContentSize());

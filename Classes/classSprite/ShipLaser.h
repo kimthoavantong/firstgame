@@ -14,10 +14,13 @@ public:
     virtual bool init();
 
     Sprite* spriteShipLaser;
+    Animation* createAnimation(std::string tenFrame, int soFrame, float delay);
 
+    bool checkNo = false;
 
     PhysicsBody* physicsLaser;
     void spriteMoveFinished(Node* sender);
+    void animateNo();
     
     CREATE_FUNC(ShipLaser);
 

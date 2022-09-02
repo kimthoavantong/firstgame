@@ -215,6 +215,11 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
         
         auto enemyBig1 = dynamic_cast<EnemyBig*>(b->getNode());
         enemyBig1->setHealthEnemy(lvDan);
+
+        auto shipLa = dynamic_cast<ShipLaser*>(a->getNode());
+        shipLa->animateNo();
+       
+
         if (enemyBig1->checkDieEnemy == true) // quái bị tiêu diệt
         {
             x1 = b->getNode()->getPosition().x; //  lấy tọa độ khi quái chết để tạo vật phẩm
@@ -243,17 +248,18 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
             }
             enemyBig1->spriteMove(); // xóa quái đã chết
         }
-        
-        this->removeChild(a->getNode(), true);
+     
         CCLOG("%d", checkMan);
         CCLOG("%d", diem);
-
     }
     else if (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 2)
     {
         
         auto enemyBig2 = dynamic_cast<EnemyBig*>(a->getNode());
         enemyBig2->setHealthEnemy(lvDan); // sét máu của quái
+
+        auto shipLa = dynamic_cast<ShipLaser*>(b->getNode());
+        shipLa->animateNo();
 
         if (enemyBig2->checkDieEnemy == true)
         {
@@ -282,7 +288,7 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
             }
             enemyBig2->spriteMove();
         }
-        this->removeChild(b->getNode(), true);
+
         CCLOG("%d", checkMan);
         CCLOG("%d", diem);
     }
@@ -318,7 +324,7 @@ void GamePlayScene::addLvDan(int a, int b)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    spriteLvDan10 = Sprite::create("HP_Bonus.png");
+    spriteLvDan10 = Sprite::create(GamePlayScene_BonusItem_Dame);
     spriteLvDan10->setPosition(Vec2( a + origin.x, origin.y + b));
     auto spriteLvDan10Body = PhysicsBody::createBox(spriteLvDan10->getContentSize());
     spriteLvDan10Body->setDynamic(false);
@@ -363,7 +369,6 @@ void GamePlayScene::createEnemyMan1() // tạo màn chơi 1
             enemyBig->runAction(Sequence::create(moveBy1,moveBydown1,nullptr));
         }
     } 
-    
 }
 void GamePlayScene::addLabelDiem() // tạo các Label
 {
@@ -426,7 +431,6 @@ void GamePlayScene::update(float dt)
         GamePlayScene::addLvDan(x1, y1);
         check = false;
     }
-
 }
 
 

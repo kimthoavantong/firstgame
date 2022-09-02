@@ -19,6 +19,8 @@
 
 // define file add GamePlayScene
 #define GamePlayScene_Sprite_QuaiShip2 "ship2.png"
+#define GamePlayScene_BonusItem_Dame "bonusitems/Damage_Bonus.png"
+#define GamePlayScene_BonusItem_HP "bonusitems/HP_Bonus.png"
 
 // define Background
 #define BackGround_full_one "BackGround2.png"
