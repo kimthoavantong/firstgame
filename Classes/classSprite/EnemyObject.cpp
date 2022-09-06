@@ -80,7 +80,7 @@ bool EnemyBig::init()
 		return false;
 	}
 
-	healthEnemy = 1;
+	healthEnemy = 3;
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("enemybig.plist", "enemybig.png");
 	spriteEnemyBig = Sprite::createWithSpriteFrameName("enemybig1.png");
@@ -160,7 +160,7 @@ bool BossOne::init()
 		return false;
 	}
 
-	healthEnemy = 30;
+	healthEnemy = 100;
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("BossOne.plist", "BossOne.png");
 	spriteBoss = Sprite::createWithSpriteFrameName("BossOne1.png");

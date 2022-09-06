@@ -39,14 +39,18 @@
 #define BackGround_item_five "background/iBackGround5.png"
 
 // font chu
-#define Font_Arial "fonts/arial.ttf"
+#define Font_Arial "fonts/Pony.ttf"
 
 // music
+
+#define Music_Background_one "music/musicBackground.wav"
 #define Music_Effect_Die "music/Boom.wav"
 #define Music_Effect_BanDan "music/musicBanDan.wav"
 #define Music_Effect_Click "music/Tiengclickchuot.wav"
 #define Music_Effect_QuaiBoss "music/Tiengquaiboss.wav"
-#define Music_Background_one "music/musicBackground.wav"
+#define Music_Effect_DanVaCham "music/vachamdan.wav"
+#define Music_Effect_Bonus "music/bonus.wav"
+
 
 
 

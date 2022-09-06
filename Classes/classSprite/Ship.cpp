@@ -76,7 +76,7 @@ void Ship::animatePlaneFly(float dt)
 }
 void Ship::moveToto()
 {
-    auto moveToto = MoveTo::create(2, Vec2(600, 0));
+    auto moveToto = MoveTo::create(2.5, Vec2(600, 0));
     this->runAction(moveToto);
 }
 

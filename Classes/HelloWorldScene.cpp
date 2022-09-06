@@ -31,7 +31,7 @@ bool HelloWorld::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     
-    auto backGround = Sprite::create(HelloWorld_Sprite_BackGround);
+    auto backGround = Sprite::create(BackGround_full_one);
     backGround->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(backGround,-1);
 
@@ -67,8 +67,9 @@ void HelloWorld::addButtonPlay()
             }
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
+                
                 auto moveSceneGamePlayScene = GamePlayScene::createPhysicsWorld();
-                Director::getInstance()->replaceScene(moveSceneGamePlayScene);
+                Director::getInstance()->replaceScene(TransitionMoveInR::create(2, moveSceneGamePlayScene));
                 break;
             }
             default:
