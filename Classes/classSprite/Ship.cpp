@@ -24,7 +24,10 @@ bool Ship::init()
     shipHeight = spriteShip->getContentSize().height;
     this->addChild(spriteShip);
     Ship::animatePlaneFly(0.1);
+<<<<<<< HEAD
     
+=======
+>>>>>>> 00bb282b9d9d6f84f30ac9681b727cd84330efbf
     
     physicsShip = PhysicsBody::createBox(spriteShip->getContentSize());
     physicsShip->setDynamic(false);
