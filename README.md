@@ -4,8 +4,10 @@
 ![image](https://user-images.githubusercontent.com/31684535/188688191-87a8342e-b0a0-4a17-8d5a-1fe09546c38e.png)
 - Menu game
 ![Untitled](https://user-images.githubusercontent.com/31684535/188691083-7e69feb3-3fd4-483c-b073-f6ee7ec5fbb1.png)
-
+![Untitled1](https://user-images.githubusercontent.com/31684535/188695012-977ddf04-9cf3-4686-88b6-781f8e4a7f2f.png)
 - Game scene
   + Di chuyển bằng các keyboard: A,W,S,D.
   + Bắn đạn bằng cách ấn vào nút.
   + Chức năng trong game: Tính điểm, lưu điểm cao nhất, add item khi quái chết, add music khi thực hiện các thao tác và va chạm, add level đạn và boss.
+
+
