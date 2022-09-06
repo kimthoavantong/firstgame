@@ -39,6 +39,9 @@
     <ClCompile Include="..\Classes\classSprite\ShipLaser.cpp">
       <Filter>src\classSprite</Filter>
     </ClCompile>
+    <ClCompile Include="..\Classes\classSprite\Bom.cpp">
+      <Filter>src\classSprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -69,6 +72,9 @@
       <Filter>src\classSprite</Filter>
     </ClInclude>
     <ClInclude Include="..\Classes\classSprite\ShipLaser.h">
+      <Filter>src\classSprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\classSprite\Bom.h">
       <Filter>src\classSprite</Filter>
     </ClInclude>
   </ItemGroup>

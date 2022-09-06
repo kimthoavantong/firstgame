@@ -50,22 +50,22 @@ endif()
 list(APPEND GAME_SOURCE
      Classes/AppDelegate.cpp
      Classes/HelloWorldScene.cpp
+	Classes/ClasDan.cpp
+	Classes/ClassPlayer.cpp
+	Classes/ClassShip.cpp
+	Classes/ClassTarget.cpp
 	Classes/GameOverScene.cpp
-	Classes/GamePlayScene.cpp
-	Classes/classSprite/Ship.cpp
-	Classes/classSprite/ShipLaser.cpp
-	Classes/classSprite/EnemyObject.cpp
+	Classes/GamePlay.cpp
      )
 list(APPEND GAME_HEADER
      Classes/AppDelegate.h
      Classes/HelloWorldScene.h
+	Classes/ClasDan.h
+	Classes/ClassPlayer.h
+	Classes/ClassShip.h
+	Classes/ClassTarget.h
 	Classes/GameOverScene.h
-	Classes/GamePlayScene.h
-	Classes/Definitions.h
-	Classes/classSprite/Ship.h
-	Classes/classSprite/ShipLaser.h
-	Classes/classSprite/EnemyObject.h
-	Classes/classSprite/Enemy.h
+	Classes/GamePlay.h
      )
 
 if(ANDROID)

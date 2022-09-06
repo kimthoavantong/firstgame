@@ -51,7 +51,7 @@ void HelloWorld::addButtonPlay()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonPlay = cocos2d::ui::Button::create(HelloWorld_Sprite_ButtonPlay);
+    buttonPlay = ui::Button::create(HelloWorld_Sprite_ButtonPlay);
     buttonPlay->setPosition(Vec2(visibleSize.width / 2 + origin.x,origin.y + visibleSize.height * 3 / 4));
     this->addChild(buttonPlay, 1);
     buttonPlay->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
@@ -74,7 +74,7 @@ void HelloWorld::addButtonShop()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    buttonShop = cocos2d::ui::Button::create(HelloWorld_Sprite_ButtonShop);
+    buttonShop = ui::Button::create(HelloWorld_Sprite_ButtonShop);
     buttonShop->setPosition(Vec2(visibleSize.width / 2 + origin.x, origin.y + visibleSize.height / 2));
     this->addChild(buttonShop, 1);
     buttonShop->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
@@ -96,7 +96,7 @@ void HelloWorld::addButtonAbout()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonAbout = cocos2d::ui::Button::create(HelloWorld_Sprite_ButtonAbout);
+    buttonAbout = ui::Button::create(HelloWorld_Sprite_ButtonAbout);
     buttonAbout->setPosition(Vec2(visibleSize.width / 2 + origin.x, origin.y + visibleSize.height / 4));
     this->addChild(buttonAbout, 1);
 
@@ -105,7 +105,7 @@ void HelloWorld::addButtonSetting()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonSetting = cocos2d::ui::Button::create(HelloWorld_Sprite_ButtonSetting);
+    buttonSetting = ui::Button::create(HelloWorld_Sprite_ButtonSetting);
     buttonSetting->setPosition(Vec2(visibleSize.width / 2 - buttonAbout->getContentSize().width * 1.2 + origin.x, origin.y + visibleSize.height / 4));
     this->addChild(buttonSetting, 1);
 }
@@ -115,7 +115,7 @@ void HelloWorld::addButtonQuick()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    buttonQuick = cocos2d::ui::Button::create(HelloWorld_Sprite_ButtonQuick);
+    buttonQuick = ui::Button::create(HelloWorld_Sprite_ButtonQuick);
     buttonQuick->setPosition(Vec2(visibleSize.width / 2 + buttonAbout->getContentSize().width * 1.2 + origin.x, origin.y + visibleSize.height / 4));
     this->addChild(buttonQuick, 1);
     buttonQuick->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
