@@ -32,7 +32,7 @@ bool GameOver::init()
     
     CCLOG("Diem %i", scoreOver);
     
-    auto backGround = Sprite::create(GameOver_Sprite_BackGround);
+    auto backGround = Sprite::create(BackGround_full_one);
     backGround->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(backGround,-1);
 
@@ -62,7 +62,7 @@ void GameOver::addButtonRestart()
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
                 auto moveSceneGamePlayScene = GamePlayScene::createPhysicsWorld();
-                Director::getInstance()->replaceScene(moveSceneGamePlayScene);
+                Director::getInstance()->replaceScene(TransitionMoveInR::create(2, moveSceneGamePlayScene));
                 break;
             }
             default:
@@ -86,7 +86,7 @@ void GameOver::addButtonResume()
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
                 auto moveSceneHelloWorld = HelloWorld::createScene();
-                Director::getInstance()->replaceScene(moveSceneHelloWorld);
+                Director::getInstance()->replaceScene(TransitionFade::create(2, moveSceneHelloWorld));
                 break;
             }
             default:
@@ -145,7 +145,7 @@ void GameOver::addLabelScore()
     labelScore = Label::createWithTTF(playScore->getCString(), Font_Arial, visibleSize.height * 0.05);
     labelScore->setAnchorPoint(Vec2(0.5, 0.5));
     labelScore->setPosition(Vec2(visibleSize.width / 2, visibleSize.height * 3 / 4));
-    labelScore->setColor(Color3B::BLACK);
+    labelScore->setColor(Color3B::WHITE);
     this->addChild(labelScore);
 
     String* playHighScore = String::createWithFormat("%i", highScoreOver);

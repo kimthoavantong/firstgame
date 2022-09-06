@@ -34,7 +34,7 @@ bool GamePlayScene::init()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
   
-    SimpleAudioEngine::getInstance()->playBackgroundMusic("musicBackground.wav", true);
+    SimpleAudioEngine::getInstance()->playBackgroundMusic(Music_Background_one, true);
 
     GamePlayScene::createPlayer(); // create sprite player
     GamePlayScene::createButtonBanDan(); // create button nhấn để bắn đạn
@@ -44,8 +44,7 @@ bool GamePlayScene::init()
     /*auto def = UserDefault::sharedUserDefault();
     def->setIntegerForKey(HIGH_SCORE, 0);
     def->flush();*/
-    lvDan = 1;
-    mang = 3;
+
 
     backGround1 = Sprite::create(BackGround_full_one);
     backGround1->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
@@ -177,9 +176,11 @@ void GamePlayScene::createButtonBanDan()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     
-    buttonBanDan = cocos2d::ui::Button::create("HelloWorld.png");
+    buttonBanDan = cocos2d::ui::Button::create(GamePlayScene_ButtonBanDan);
+    buttonBanDan->setOpacity(50);
     buttonBanDan->setPosition(Vec2(visibleSize.width - buttonBanDan->getContentSize().width/2, buttonBanDan->getContentSize().height/2));
     this->addChild(buttonBanDan, 1);
+    
     buttonBanDan->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
         {
             switch (type)
@@ -188,7 +189,7 @@ void GamePlayScene::createButtonBanDan()
             {
                 spriteShip->checkBanDan = true;
                 GamePlayScene::createDan();
-                SimpleAudioEngine::getInstance()->playEffect("musicBanDan.wav",false);
+                SimpleAudioEngine::getInstance()->playEffect(Music_Effect_BanDan,false);
                 break;
             }
             default:
@@ -255,12 +256,15 @@ void GamePlayScene::addDanBoss1(float dt)
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
     for (float i = -2; i < 3; i++)
     {
-        bossBomS = BomS::create();
-        bossBomS->setPosition(Vec2(bossSprite1->getPositionX(),bossSprite1->getPositionY()));
-        addChild(bossBomS, 9);
-        auto moveBomS = MoveTo::create(5,Vec2(-visibleSize.width*1.1,visibleSize.height/2 + visibleSize.height * i));
-        auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
-        bossBomS->runAction(Sequence::create(moveBomS, actionMoveDone, nullptr));
+        if (bossSprite1 != nullptr)
+        {
+            bossBomS = BomS::create();
+            bossBomS->setPosition(Vec2(bossSprite1->getPositionX(), bossSprite1->getPositionY()));
+            addChild(bossBomS, 9);
+            auto moveBomS = MoveTo::create(3, Vec2(-visibleSize.width * 0.05, visibleSize.height / 2 + visibleSize.height * i / 4));
+            auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
+            bossBomS->runAction(Sequence::create(moveBomS, actionMoveDone, nullptr));
+        }
     }
 }
 
@@ -271,9 +275,32 @@ void GamePlayScene::addLabel() // tạo các Label
 
     String* teamscore = String::createWithFormat("%i", diem);
     labelDiem = Label::createWithTTF(teamscore->getCString(),Font_Arial,visibleSize.height*0.05);
-    labelDiem->setPosition(Vec2(visibleSize.width * 0.2, visibleSize.height * 0.9));
+    labelDiem->setPosition(Vec2(visibleSize.width * 0.5, visibleSize.height * 0.95));
     labelDiem->setColor(Color3B::WHITE);
     addChild(labelDiem,11);
+
+
+    String* mangSt = String::createWithFormat("%i", mang);
+    labelMang = Label::createWithTTF(mangSt->getCString(), Font_Arial, visibleSize.height * 0.05);
+    labelMang->setPosition(Vec2(visibleSize.width * 0.35, visibleSize.height * 0.95));
+    labelMang->setColor(Color3B::WHITE);
+    addChild(labelMang, 11);
+
+    auto labelSpriteHp = Sprite::create(GamePlayScene_BonusItem_HP);
+    labelSpriteHp->setPosition(Vec2(visibleSize.width * 0.4, visibleSize.height * 0.95));
+    this->addChild(labelSpriteHp, 11);
+
+
+    String* lvDanSt = String::createWithFormat("%i", lvDan);
+    labelLvDan = Label::createWithTTF(lvDanSt->getCString(), Font_Arial, visibleSize.height * 0.05);
+    labelLvDan->setPosition(Vec2(visibleSize.width * 0.65, visibleSize.height * 0.95));
+    labelLvDan->setColor(Color3B::WHITE);
+    addChild(labelLvDan, 11);
+
+    auto labelSpriteLvDan = Sprite::create(GamePlayScene_BonusItem_Dame);
+    labelSpriteLvDan->setPosition(Vec2(visibleSize.width * 0.60, visibleSize.height * 0.95));
+    this->addChild(labelSpriteLvDan,11);
+
 
     /*Best Score*/
     auto def = UserDefault::sharedUserDefault();
@@ -282,7 +309,7 @@ void GamePlayScene::addLabel() // tạo các Label
     labelhighScore = Label::createWithTTF(highScore->getCString(), Font_Arial , visibleSize.height * 0.1, Size::ZERO, TextHAlignment::LEFT);
     labelhighScore->setPosition(Vec2(visibleSize.width * 0.1, visibleSize.height * 0.9));
     labelhighScore->setColor(Color3B::RED);
-    addChild(labelhighScore, 5);
+    /*addChild(labelhighScore, 5);*/
 }
 
 // xét va chạm
@@ -299,20 +326,21 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     //xét đạn bắn chết quái
     if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 30)
     {
+        SimpleAudioEngine::getInstance()->playEffect(Music_Effect_DanVaCham, false);
+
         auto shipLa = dynamic_cast<ShipLaser*>(a->getNode());
         shipLa->animateNo();
 
         auto enemyBig1 = dynamic_cast<EnemyBig*>(b->getNode());
         enemyBig1->setHealthEnemy(lvDan);
-
         if (enemyBig1->checkDieEnemy == true) // quái bị tiêu diệt
         {
             x1 = b->getNode()->getPosition().x; //  lấy tọa độ khi quái chết để tạo vật phẩm
             y1 = b->getNode()->getPosition().y;
 
+            SimpleAudioEngine::getInstance()->playEffect(Music_Effect_QuaiBoss, false);
             checkMan++; // tiêu diệt được 1 quái
             diem += 5;
-
             String* teamscore = String::createWithFormat("%i", diem); // add điểm vào label
             labelDiem->setString(teamscore->getCString());
 
@@ -336,18 +364,18 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
     }
     else if (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 2)
     {
+        SimpleAudioEngine::getInstance()->playEffect(Music_Effect_DanVaCham, false);
+        
         auto shipLa = dynamic_cast<ShipLaser*>(b->getNode());
         shipLa->animateNo();
-
         auto enemyBig2 = dynamic_cast<EnemyBig*>(a->getNode());
         enemyBig2->setHealthEnemy(lvDan); // sét máu của quái
-
-
         if (enemyBig2->checkDieEnemy == true)
         {
             x1 = a->getPosition().x; // lấy tọa độ khi quái chết để tạo vật phẩm
             y1 = a->getPosition().y;
 
+            SimpleAudioEngine::getInstance()->playEffect(Music_Effect_QuaiBoss, false);
             diem = diem + 5;
             checkMan++;
             String* teamscore = String::createWithFormat("%i", diem);
@@ -378,12 +406,13 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
 
         auto enemyBoss1 = dynamic_cast<BossOne*>(b->getNode());
         enemyBoss1->setHealthEnemy(lvDan); // sét máu của quái
-
+        SimpleAudioEngine::getInstance()->playEffect(Music_Effect_DanVaCham, false);
         if (enemyBoss1->checkDieBoss == true)
         {
             x1 = b->getPosition().x; // lấy tọa độ khi Boss chết để tạo vật phẩm
             y1 = b->getPosition().y;
 
+            SimpleAudioEngine::getInstance()->playEffect(Music_Effect_Die, false);
             diem = diem + 15;
             checkMan++;
             String* teamscore = String::createWithFormat("%i", diem);
@@ -399,14 +428,16 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
                 labelhighScore->setString(highScore->getCString());
             }
             check = true;
+            this->unschedule(schedule_selector(GamePlayScene::addDanBoss1));
             enemyBoss1->spriteMove();
         }
     }
     else if (a->getCollisionBitmask() == 19 && b->getCollisionBitmask() == 2)
     {
+        SimpleAudioEngine::getInstance()->playEffect(Music_Effect_DanVaCham, false);
+        
         auto shipLa = dynamic_cast<ShipLaser*>(b->getNode());
         shipLa->animateNo(); // xóa đạn
-
         auto enemyBoss1 = dynamic_cast<BossOne*>(a->getNode());
         enemyBoss1->setHealthEnemy(lvDan); // sét máu của quái
         if (enemyBoss1->checkDieBoss == true)
@@ -414,7 +445,8 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
             x1 = a->getPosition().x; // lấy tọa độ khi Boss chết để tạo vật phẩm
             y1 = a->getPosition().y;
 
-            diem = diem + 15;
+            SimpleAudioEngine::getInstance()->playEffect(Music_Effect_QuaiBoss, false);
+            diem = diem + 50;
             checkMan++;
             String* teamscore = String::createWithFormat("%i", diem);
             labelDiem->setString(teamscore->getCString());
@@ -429,15 +461,37 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
                 labelhighScore->setString(highScore->getCString());
             }
             check = true;
+            this->unschedule(schedule_selector(GamePlayScene::addDanBoss1));
             enemyBoss1->spriteMove();
         }
     }
     // xét plane va chạm với quái
     else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 30)
-        || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1))
+        || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1)
+        || (a->getCollisionBitmask() == 18 && b->getCollisionBitmask() == 1)
+        || (a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 18)
+        || (a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 19)
+        || (a->getCollisionBitmask() == 19 && b->getCollisionBitmask() == 1))
     {
+        SimpleAudioEngine::getInstance()->playEffect(Music_Effect_Die, false);
         mang--;
-        lvDan--;
+        if (lvDan > 1)
+        {
+            lvDan--;
+            String* lvDanStr = String::createWithFormat("%i", lvDan);
+            labelLvDan->setString(lvDanStr->getCString());
+        }
+        String* mangStr = String::createWithFormat("%i",mang);
+        labelMang->setString(mangStr->getCString());
+
+        if (a->getCollisionBitmask() == 18 )
+        {
+            this->removeChild(a->getNode(), true);
+        }
+        else if (b->getCollisionBitmask() == 18)
+        {
+            this->removeChild(b->getNode(), true);
+        }
         if (mang >= 1 && a->getCollisionBitmask() == 1 )
         {
             
@@ -456,7 +510,7 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
             // gameover
             keys.clear(); //Kết thúc tất cả các keyboard còn giữ khi kết thúc game
             auto moveGameOver = GameOver::createScene(diem, iHighScore);
-            Director::getInstance()->replaceScene(moveGameOver);
+            Director::getInstance()->replaceScene(TransitionFade::create(2,moveGameOver));
         }
     }
     // xét plane ăn vật phẩm tăng dame
@@ -464,6 +518,10 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
         || (a->getCollisionBitmask() == 100 && b->getCollisionBitmask() == 1))
     {
         lvDan++;
+        String* lvDanSt = String::createWithFormat("%i", lvDan);
+        labelLvDan->setString(lvDanSt->getCString());
+        
+        SimpleAudioEngine::getInstance()->playEffect(Music_Effect_Bonus, false);
         if (a->getCollisionBitmask() == 100)
         {
             this->removeChild(a->getNode(), true);
@@ -529,7 +587,7 @@ void GamePlayScene::update(float dt)
         checkMan++;
         keys.clear(); //Kết thúc tất cả các keyboard còn giữ khi kết thúc game
         auto moveWin = GameOver::createScene(diem, iHighScore);
-        Director::getInstance()->replaceScene(moveWin);
+        Director::getInstance()->replaceScene(TransitionFade::create(2, moveWin));
     }
 }
 

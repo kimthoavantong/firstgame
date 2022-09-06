@@ -1,5 +1,4 @@
 ﻿
-
 #ifndef __GamePlayScene_SCENE_H__
 #define __GamePlayScene_SCENE_H__
 
@@ -60,8 +59,8 @@ public:
 
     int x1; int y1; // tọa độ add phần quà khi quái chết
     bool check = false; // check để add qua
-    int lvDan;
-    int mang;
+    int lvDan = 1;
+    int mang = 3;
     void addDanBoss1(float dt);
 
     CREATE_FUNC(GamePlayScene);
@@ -74,6 +73,8 @@ private:
 
     cocos2d::Label* labelDiem;
     cocos2d::Label* labelhighScore;
+    cocos2d::Label* labelMang;
+    cocos2d::Label* labelLvDan;
     int iHighScore = 0;
     int diem;
     
