@@ -5,6 +5,7 @@
 #include "Definitions.h"
 #include "GamePlayScene.h"
 #include "GameOverScene.h"
+#include "ui/CocosGUI.h"
 
 using namespace cocos2d;
 using namespace experimental;
@@ -50,7 +51,8 @@ void GameOver::addButtonRestart()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonRestart = ui::Button::create(GameOver_Sprite_ButtonRestart);
+
+    buttonRestart = cocos2d::ui::Button::create(GameOver_Sprite_ButtonRestart);
     buttonRestart->setPosition(Vec2(visibleSize.width / 2 + origin.x , origin.y + visibleSize.height / 2));
     this->addChild(buttonRestart, 1);
     buttonRestart->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
@@ -73,7 +75,7 @@ void GameOver::addButtonResume()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonResume = ui::Button::create(GameOver_Sprite_ButtonResume);
+    buttonResume = cocos2d::ui::Button::create(GameOver_Sprite_ButtonResume);
     buttonResume->setPosition(Vec2(visibleSize.width / 2 + origin.x,
         origin.y +  visibleSize.height / 2 - buttonResume->getContentSize().height - 20));
     this->addChild(buttonResume, 1);
@@ -97,7 +99,7 @@ void GameOver::addButtonSetting()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonSetting = ui::Button::create(GameOver_Sprite_ButtonSetting);
+    buttonSetting = cocos2d::ui::Button::create(GameOver_Sprite_ButtonSetting);
     buttonSetting->setPosition(Vec2(visibleSize.width / 2 + origin.x - 20 - buttonSetting->getContentSize().width,
         origin.y + visibleSize.height / 2 - 40 - buttonSetting->getContentSize().height * 2));
     this->addChild(buttonSetting, 1);
@@ -106,7 +108,7 @@ void GameOver::addButtonAbouts()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonAbouts = ui::Button::create(GameOver_Sprite_ButtonAbout);
+    buttonAbouts = cocos2d::ui::Button::create(GameOver_Sprite_ButtonAbout);
     buttonAbouts->setPosition(Vec2(visibleSize.width / 2 + origin.x,
         origin.y + visibleSize.height/2 - buttonAbouts->getContentSize().height*2 - 40));
     this->addChild(buttonAbouts, 1);
@@ -115,7 +117,7 @@ void GameOver::addButtonQuit()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
-    buttonQuit = ui::Button::create(GameOver_Sprite_ButtonQuit);
+    buttonQuit = cocos2d::ui::Button::create(GameOver_Sprite_ButtonQuit);
     buttonQuit->setPosition(Vec2(visibleSize.width / 2 + origin.x + 20 + buttonQuit->getContentSize().width,
         origin.y + visibleSize.height / 2 - 40 - buttonQuit->getContentSize().height * 2));
     buttonQuit->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)

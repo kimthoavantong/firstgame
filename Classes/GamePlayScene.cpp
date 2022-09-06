@@ -3,6 +3,7 @@
 #include "GameOverScene.h"
 #include "Definitions.h"
 #include "GamePlayScene.h"
+#include "ui/CocosGUI.h"
 
 
 using namespace cocos2d;
@@ -12,6 +13,7 @@ using namespace std;
 USING_NS_CC;
 
 const char* HIGH_SCORE = "key"; // highscore save in system
+
 
 
 Scene* GamePlayScene::createPhysicsWorld()
@@ -37,12 +39,13 @@ bool GamePlayScene::init()
     GamePlayScene::createPlayer(); // create sprite player
     GamePlayScene::createButtonBanDan(); // create button nhấn để bắn đạn
     GamePlayScene::createEnemyMan1(); // tạo quái
-    GamePlayScene::addLabelDiem(); // tạo các label
+    GamePlayScene::addLabel(); // tạo các label
 
     /*auto def = UserDefault::sharedUserDefault();
     def->setIntegerForKey(HIGH_SCORE, 0);
     def->flush();*/
     lvDan = 1;
+    mang = 3;
 
     backGround1 = Sprite::create(BackGround_full_one);
     backGround1->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
@@ -50,7 +53,7 @@ bool GamePlayScene::init()
 
     backGround2 = Sprite::create(BackGround_full_one);
     backGround2->setPosition(Vec2(visibleSize.width*1.5, visibleSize.height / 2));
-    this->addChild(backGround2, -10);
+    this->addChild(backGround2, -11);
 
     iBackGround1 = Sprite::create(BackGround_item_one);
     iBackGround1->setPosition(Vec2(visibleSize.width * 1.5, visibleSize.height / 2));
@@ -64,7 +67,7 @@ bool GamePlayScene::init()
     iBackGround3->setPosition(Vec2(visibleSize.width * 1.8, visibleSize.height *0.8));
     this->addChild(iBackGround3, -1);
     
-    mang = 3;
+    
 
 
     // sự kiện keyboard
@@ -152,11 +155,11 @@ void GamePlayScene::createDan()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     
-    spriteShipLaser1 = ShipLaser::create();
-    spriteShipLaser1->getDameDan(lvDan);
+    spriteShipLaser1 = ShipLaser::createShipLaser(lvDan);
     spriteShipLaser1->setPosition(Vec2(spriteShip->getPositionX() + spriteShip->shipWidth / 4,
-    spriteShip->getPositionY() - spriteShip->shipHeight / 4));
+                spriteShip->getPositionY() - spriteShip->shipHeight / 4));
     this->addChild(spriteShipLaser1, 8);
+
 }
 
 // Remove sprite
@@ -174,7 +177,7 @@ void GamePlayScene::createButtonBanDan()
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     
-    buttonBanDan = ui::Button::create("HelloWorld.png");
+    buttonBanDan = cocos2d::ui::Button::create("HelloWorld.png");
     buttonBanDan->setPosition(Vec2(visibleSize.width - buttonBanDan->getContentSize().width/2, buttonBanDan->getContentSize().height/2));
     this->addChild(buttonBanDan, 1);
     buttonBanDan->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
@@ -200,17 +203,17 @@ void GamePlayScene::addLvDan(int a, int b)
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    spriteLvDan10 = Sprite::create(GamePlayScene_BonusItem_Dame);
-    spriteLvDan10->setPosition(Vec2( a + origin.x, origin.y + b));
-    auto spriteLvDan10Body = PhysicsBody::createBox(spriteLvDan10->getContentSize());
-    spriteLvDan10Body->setDynamic(false);
-    spriteLvDan10Body->setCollisionBitmask(100);
-    spriteLvDan10Body->setContactTestBitmask(true);
-    spriteLvDan10->setPhysicsBody(spriteLvDan10Body);
-    this->addChild(spriteLvDan10, 10);
+    spriteLvDan1 = Sprite::create(GamePlayScene_BonusItem_Dame);
+    spriteLvDan1->setPosition(Vec2( a + origin.x, origin.y + b));
+    auto spriteLvDan1Body = PhysicsBody::createBox(spriteLvDan1->getContentSize());
+    spriteLvDan1Body->setDynamic(false);
+    spriteLvDan1Body->setCollisionBitmask(100);
+    spriteLvDan1Body->setContactTestBitmask(true);
+    spriteLvDan1->setPhysicsBody(spriteLvDan1Body);
+    this->addChild(spriteLvDan1, 10);
     auto moveLvDan = MoveBy::create(6,Vec2(-visibleSize.width,0));
     auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
-    spriteLvDan10->runAction(Sequence::create(moveLvDan, actionMoveDone, NULL));
+    spriteLvDan1->runAction(Sequence::create(moveLvDan, actionMoveDone, NULL));
 }
 
 
@@ -232,7 +235,36 @@ void GamePlayScene::createEnemyMan1() // tạo màn chơi 1
         }
     } 
 }
-void GamePlayScene::addLabelDiem() // tạo các Label
+// Add boss 
+void GamePlayScene::createBoss1()
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    bossSprite1 = BossOne::create();
+    bossSprite1->setPosition(Vec2(visibleSize.width *0.8, visibleSize.height * 2));
+    addChild(bossSprite1, 10);
+    auto moveToBoss = MoveTo::create(3,Vec2(visibleSize.width*0.8,visibleSize.height/2));
+    bossSprite1->runAction(moveToBoss);
+    this->schedule(schedule_selector(GamePlayScene::addDanBoss1),5);
+}
+
+void GamePlayScene::addDanBoss1(float dt)
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    for (float i = -2; i < 3; i++)
+    {
+        bossBomS = BomS::create();
+        bossBomS->setPosition(Vec2(bossSprite1->getPositionX(),bossSprite1->getPositionY()));
+        addChild(bossBomS, 9);
+        auto moveBomS = MoveTo::create(5,Vec2(-visibleSize.width*1.1,visibleSize.height/2 + visibleSize.height * i));
+        auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(GamePlayScene::spriteMoveFinished, this));
+        bossBomS->runAction(Sequence::create(moveBomS, actionMoveDone, nullptr));
+    }
+}
+
+void GamePlayScene::addLabel() // tạo các Label
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
@@ -339,27 +371,87 @@ bool GamePlayScene::onContactBegin1(PhysicsContact& contact)
         }
 
     }
+    else if (a->getCollisionBitmask() == 2 && b->getCollisionBitmask() == 19)
+    {
+        auto shipLa = dynamic_cast<ShipLaser*>(a->getNode());
+        shipLa->animateNo(); // xóa đạn
+
+        auto enemyBoss1 = dynamic_cast<BossOne*>(b->getNode());
+        enemyBoss1->setHealthEnemy(lvDan); // sét máu của quái
+
+        if (enemyBoss1->checkDieBoss == true)
+        {
+            x1 = b->getPosition().x; // lấy tọa độ khi Boss chết để tạo vật phẩm
+            y1 = b->getPosition().y;
+
+            diem = diem + 15;
+            checkMan++;
+            String* teamscore = String::createWithFormat("%i", diem);
+            labelDiem->setString(teamscore->getCString());
+            auto def = UserDefault::sharedUserDefault();
+            iHighScore = def->getIntegerForKey(HIGH_SCORE);
+            if (diem >= iHighScore)
+            {
+                def->setIntegerForKey(HIGH_SCORE, diem);
+                def->flush();
+                iHighScore = diem;
+                String* highScore = String::createWithFormat("%i", iHighScore);
+                labelhighScore->setString(highScore->getCString());
+            }
+            check = true;
+            enemyBoss1->spriteMove();
+        }
+    }
+    else if (a->getCollisionBitmask() == 19 && b->getCollisionBitmask() == 2)
+    {
+        auto shipLa = dynamic_cast<ShipLaser*>(b->getNode());
+        shipLa->animateNo(); // xóa đạn
+
+        auto enemyBoss1 = dynamic_cast<BossOne*>(a->getNode());
+        enemyBoss1->setHealthEnemy(lvDan); // sét máu của quái
+        if (enemyBoss1->checkDieBoss == true)
+        {
+            x1 = a->getPosition().x; // lấy tọa độ khi Boss chết để tạo vật phẩm
+            y1 = a->getPosition().y;
+
+            diem = diem + 15;
+            checkMan++;
+            String* teamscore = String::createWithFormat("%i", diem);
+            labelDiem->setString(teamscore->getCString());
+            auto def = UserDefault::sharedUserDefault();
+            iHighScore = def->getIntegerForKey(HIGH_SCORE);
+            if (diem >= iHighScore)
+            {
+                def->setIntegerForKey(HIGH_SCORE, diem);
+                def->flush();
+                iHighScore = diem;
+                String* highScore = String::createWithFormat("%i", iHighScore);
+                labelhighScore->setString(highScore->getCString());
+            }
+            check = true;
+            enemyBoss1->spriteMove();
+        }
+    }
     // xét plane va chạm với quái
     else if ((a->getCollisionBitmask() == 1 && b->getCollisionBitmask() == 30)
         || (a->getCollisionBitmask() == 30 && b->getCollisionBitmask() == 1))
     {
-        if (mang > 1 && a->getCollisionBitmask() == 1 )
+        mang--;
+        lvDan--;
+        if (mang >= 1 && a->getCollisionBitmask() == 1 )
         {
-            mang = mang - 1;
-            keys.emplace();
+            
             keys.clear();
             a->getNode()->setPosition(Vec2(-visibleSize.width / 2, visibleSize.height / 2));
             a->getNode()->runAction(MoveTo::create(2, Vec2(visibleSize.width /8, visibleSize.height/2)));
         }
-        else if (mang > 1 && b->getCollisionBitmask() == 1)
+        else if (mang >= 1 && b->getCollisionBitmask() == 1)
         {
-            mang = mang - 1;
-            keys.emplace();
             keys.clear();
             b->getNode()->setPosition(Vec2(-visibleSize.width / 2, visibleSize.height / 2));
             b->getNode()->runAction(MoveTo::create(2, Vec2(visibleSize.width / 8, visibleSize.height / 2)));
         }
-        else if (mang == 1)
+        else if (mang == 0)
         {
             // gameover
             keys.clear(); //Kết thúc tất cả các keyboard còn giữ khi kết thúc game
@@ -429,11 +521,12 @@ void GamePlayScene::update(float dt)
     }
     if (checkMan == 40)
     {
-        GamePlayScene::createEnemyMan1();
+        GamePlayScene::createBoss1();
         checkMan++;
     }
-    else if (checkMan == 81)  // win va kết thúc
+    else if (checkMan == 42)  // win va kết thúc
     {
+        checkMan++;
         keys.clear(); //Kết thúc tất cả các keyboard còn giữ khi kết thúc game
         auto moveWin = GameOver::createScene(diem, iHighScore);
         Director::getInstance()->replaceScene(moveWin);

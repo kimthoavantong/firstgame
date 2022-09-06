@@ -29,7 +29,6 @@ public:
     void addButtonSetting();
     void addButtonQuit();
 
-
     // implement the "static create()" method manually
     CREATE_FUNC(GameOver);
 };

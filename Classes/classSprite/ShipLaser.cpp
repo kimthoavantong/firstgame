@@ -2,9 +2,10 @@
 #include "ShipLaser.h"
 
 USING_NS_CC;
-
-ShipLaser* ShipLaser::createShipLaser()
+int dameDanOne;
+ShipLaser* ShipLaser::createShipLaser(int a)
 {
+    dameDanOne = a;
     return ShipLaser::create();
 }
 
@@ -14,6 +15,8 @@ bool ShipLaser::init()
     {
         return false;
     }
+    if (dameDanOne == 1)
+    {
         SpriteFrameCache::getInstance()->addSpriteFramesWithFile("dan1.plist", "dan1.png");
         spriteShipLaser = Sprite::createWithSpriteFrameName("dan11.png");
         this->addChild(spriteShipLaser);
@@ -24,7 +27,11 @@ bool ShipLaser::init()
         physicsLaser->setCollisionBitmask(2);
         this->addComponent(physicsLaser);
 
-    /*else if (dameDan == 2)
+        auto moveUp = MoveBy::create(2, Vec2(2000, 0));
+        auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(ShipLaser::spriteMoveFinished, this));
+        this->runAction(Sequence::create(moveUp, actionMoveDone, NULL));
+    }
+    else if (dameDanOne >= 2)
     {
         SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Missile.plist", "Missile.png");
         spriteShipLaser = Sprite::createWithSpriteFrameName("Missile3_Fly1.png");
@@ -38,10 +45,12 @@ bool ShipLaser::init()
         physicsLaser->setContactTestBitmask(true);
         physicsLaser->setCollisionBitmask(2);
         this->addComponent(physicsLaser);
-    }*/
-    auto moveUp = MoveBy::create(2, Vec2(2000,0));
-    auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(ShipLaser::spriteMoveFinished, this));
-    this->runAction(Sequence::create(moveUp, actionMoveDone, NULL));
+
+        auto moveUp = MoveBy::create(2, Vec2(2000, 0));
+        auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(ShipLaser::spriteMoveFinished, this));
+        this->runAction(Sequence::create(moveUp, actionMoveDone, NULL));
+    }
+    
    
     return true;
 }
@@ -67,15 +76,15 @@ Animation* ShipLaser::createAnimation(std::string tenFrame, int soFrame, float d
 }
 void ShipLaser::animateNo()
 {
-    if (dameDan == 1)
+    if (dameDanOne == 1)
     {
         this->stopAllActions();
         spriteShipLaser->stopAllActions();
         Animate* animatePlay = Animate::create(ShipLaser::createAnimation("dan1", 8, 0.01));
         auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(ShipLaser::spriteMoveFinished, this));
         spriteShipLaser->runAction(Sequence::create(animatePlay, actionMoveDone, nullptr));
-    }
-    else if (dameDan >= 2)
+    }  
+    else if (dameDanOne >= 2)
     {
         this->stopAllActions();
         spriteShipLaser->stopAllActions();
@@ -84,14 +93,7 @@ void ShipLaser::animateNo()
         spriteShipLaser->runAction(Sequence::create(animatePlay, actionMoveDone, nullptr));
     }
 }
-//int ShipLaser::getDameDan(int a)
-//{
-//    auto def = UserDefault::sharedUserDefault();
-//    def->setIntegerForKey(dameDanLv, a);
-//    def->flush();
-//    dameDan = def->getIntegerForKey(dameDanLv);
-//    return dameDan;
-//}
+
 
 
 

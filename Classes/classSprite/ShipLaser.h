@@ -10,7 +10,7 @@ USING_NS_CC;
 class ShipLaser : public cocos2d::Node
 {
 public:
-    static ShipLaser* createShipLaser();
+    static ShipLaser* createShipLaser(int a);
     virtual bool init();
 
     Sprite* spriteShipLaser;
@@ -20,9 +20,7 @@ public:
     PhysicsBody* physicsLaser;
     void spriteMoveFinished(Node* sender);
     void animateNo();
-    int dameDan;
     CREATE_FUNC(ShipLaser);
-    int getDameDan(int a);
 
 };
 
