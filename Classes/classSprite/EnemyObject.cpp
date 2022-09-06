@@ -67,9 +67,6 @@ void EnemySmall::spriteMoveFinished(Node* sender)
 
 
 
-
-
-
 /////////
 
 EnemyBig* EnemyBig::createEnemyBig()
@@ -83,7 +80,7 @@ bool EnemyBig::init()
 		return false;
 	}
 
-	healthEnemy = 3;
+	healthEnemy = 1;
 
 	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("enemybig.plist", "enemybig.png");
 	spriteEnemyBig = Sprite::createWithSpriteFrameName("enemybig1.png");
@@ -108,7 +105,6 @@ bool EnemyBig::init()
 	this->addComponent(physicsBig);
 
 	auto moveBig = MoveBy::create(6, Vec2(-2000, 0));
-	auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(EnemyBig::spriteMoveFinished, this));
 	auto moveBy1 = MoveBy::create(1, Vec2(0, 20));
 	auto moveBy2 = MoveBy::create(2, Vec2(0, -40));
 	auto moveBy3 = MoveBy::create(1, Vec2(0, 20));
@@ -150,6 +146,114 @@ void EnemyBig::addBom(float dt)
 		}
 	}
 }
+
+/////////
+
+BossOne* BossOne::createEnemyBig()
+{
+	return BossOne::create();
+}
+bool BossOne::init()
+{
+	if (!Node::init())
+	{
+		return false;
+	}
+
+	healthEnemy = 30;
+
+	SpriteFrameCache::getInstance()->addSpriteFramesWithFile("BossOne.plist", "BossOne.png");
+	spriteBoss = Sprite::createWithSpriteFrameName("BossOne1.png");
+	this->addChild(spriteBoss);
+
+
+	Vector<SpriteFrame*> aniBoss;
+	aniBoss.reserve(4);
+	aniBoss.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("BossOne1.png"));
+	aniBoss.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("BossOne2.png"));
+	aniBoss.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("BossOne3.png"));
+	aniBoss.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("BossOne4.png"));
+
+	Animation* animationBoss = Animation::createWithSpriteFrames(aniBoss, 0.02);
+	Animate* animateBoss = Animate::create(animationBoss);
+	spriteBoss->runAction(RepeatForever::create(animateBoss));
+
+	physicsBoss = PhysicsBody::createBox(spriteBoss->getContentSize());
+	physicsBoss->setDynamic(false);
+	physicsBoss->setCollisionBitmask(19);
+	physicsBoss->setContactTestBitmask(true);
+	this->addComponent(physicsBoss);
+
+	return true;
+}
+
+int BossOne::getHealthEnemy()
+{
+	return this->healthEnemy;
+}
+void BossOne::setHealthEnemy(int a)
+{
+	healthEnemy = healthEnemy - a;
+	if (healthEnemy <= 0)
+	{
+		checkDieBoss = true;
+	}
+}
+void BossOne::spriteMove()
+{
+	this->removeFromParentAndCleanup(true);
+}
+void BossOne::spriteMoveFinished(Node* sender)
+{
+	this->removeFromParentAndCleanup(true);
+}
+
+
+/////////
+
+BomS* BomS::createBomS()
+{
+	return BomS::create();
+}
+bool BomS::init()
+{
+	if (!Node::init())
+	{
+		return false;
+	}
+
+	healthEnemy = 1;
+
+	bomSSprite = Sprite::create("Bomb3Idle1.png");
+	this->addChild(bomSSprite);
+
+	physicsBomS = PhysicsBody::createBox(bomSSprite->getContentSize());
+	physicsBomS->setDynamic(false);
+	physicsBomS->setCollisionBitmask(18);
+	physicsBomS->setContactTestBitmask(true);
+	this->addComponent(physicsBomS);
+
+	return true;
+}
+
+int BomS::getHealthEnemy()
+{
+	return this->healthEnemy;
+}
+void BomS::setHealthEnemy(int a)
+{
+	healthEnemy = healthEnemy - a;
+}
+void BomS::spriteMove()
+{
+	this->removeFromParentAndCleanup(true);
+}
+void BomS::spriteMoveFinished(Node* sender)
+{
+	this->removeFromParentAndCleanup(true);
+}
+
+
 
 
 

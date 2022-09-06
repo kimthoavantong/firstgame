@@ -23,7 +23,8 @@ public:
 
     Ship* spriteShip;
     ShipLaser* spriteShipLaser1;
-    ShipLaser* spriteShipLaser2;
+    BossOne* bossSprite1;
+    BomS* bossBomS;
     void updateEnemy(float);
 
     cocos2d::Sprite* backGround1;
@@ -33,7 +34,7 @@ public:
     cocos2d::Sprite* iBackGround3;
     cocos2d::Sprite* iBackGround4;
     cocos2d::Sprite* iBackGround5;
-    cocos2d::Sprite* spriteLvDan10;
+    cocos2d::Sprite* spriteLvDan1;
     cocos2d::Sprite* spriteTarget;
 
     void addLvDan(int a, int b);
@@ -49,19 +50,19 @@ public:
     void createPlayer();
     void createTarget();
     void createButtonBanDan();
-    void addLabelDiem();
+    void addLabel();
     void spriteMoveFinished(Node* sender);
     
     int checkMan = 0 ;
     void createEnemyMan1();
     void createEnemyMan2();
-
+    void createBoss1();
 
     int x1; int y1; // tọa độ add phần quà khi quái chết
     bool check = false; // check để add qua
     int lvDan;
     int mang;
-
+    void addDanBoss1(float dt);
 
     CREATE_FUNC(GamePlayScene);
     /*void tick(float dt);*/
