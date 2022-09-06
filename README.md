@@ -8,4 +8,4 @@
 - Game scene
   + Di chuyển bằng các keyboard: A,W,S,D.
   + Bắn đạn bằng cách ấn vào nút.
-  + Chức năng trong game: Tính điểm, lưu điểm cao nhất, add item khi quái chết, add music khi thực hiện các thao tác và va chạm.
+  + Chức năng trong game: Tính điểm, lưu điểm cao nhất, add item khi quái chết, add music khi thực hiện các thao tác và va chạm, add level đạn và boss.
