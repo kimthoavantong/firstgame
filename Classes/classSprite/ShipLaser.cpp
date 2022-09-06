@@ -21,7 +21,6 @@ bool ShipLaser::init()
         spriteShipLaser = Sprite::createWithSpriteFrameName("dan11.png");
         this->addChild(spriteShipLaser);
 
-<<<<<<< HEAD
         physicsLaser = PhysicsBody::createBox(spriteShipLaser->getContentSize());
         physicsLaser->setDynamic(false);
         physicsLaser->setContactTestBitmask(true);
@@ -52,28 +51,6 @@ bool ShipLaser::init()
         this->runAction(Sequence::create(moveUp, actionMoveDone, NULL));
     }
     
-=======
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("Missile3.plist","Missile3.png");
-    spriteShipLaser = Sprite::createWithSpriteFrameName("Missile3_Fly1.png");
-    this->addChild(spriteShipLaser);
-
-    //spriteShipLaser = Sprite::create("shiplaser/Bullet1.png");
-    //this->addChild(spriteShipLaser);
-
-    physicsLaser = PhysicsBody::createBox(spriteShipLaser->getContentSize());
-    physicsLaser->setDynamic(false);
-    physicsLaser->setContactTestBitmask(true);
-    physicsLaser->setCollisionBitmask(2);
-    this->addComponent(physicsLaser);
-
-    Animate* animatePlay = Animate::create(ShipLaser::createAnimation("Missile3_Fly", 10, 0.1));
-    spriteShipLaser->runAction(RepeatForever::create(animatePlay));
-
-
-    auto moveUp = MoveBy::create(2, Vec2(2000,0));
-    auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(ShipLaser::spriteMoveFinished, this));
-    this->runAction(Sequence::create(moveUp, actionMoveDone, NULL));
->>>>>>> 00bb282b9d9d6f84f30ac9681b727cd84330efbf
    
     return true;
 }
@@ -99,7 +76,6 @@ Animation* ShipLaser::createAnimation(std::string tenFrame, int soFrame, float d
 }
 void ShipLaser::animateNo()
 {
-<<<<<<< HEAD
     if (dameDanOne == 1)
     {
         this->stopAllActions();
@@ -121,16 +97,6 @@ void ShipLaser::animateNo()
 
 
 
-=======
-    this->stopAllActions();
-    spriteShipLaser->stopAllActions();
-    Animate* animatePlay = Animate::create(ShipLaser::createAnimation("Missile3_No", 9, 0.02));
-    auto actionMoveDone = CallFuncN::create(CC_CALLBACK_1(ShipLaser::spriteMoveFinished, this));
-    spriteShipLaser->runAction(Sequence::create(animatePlay,actionMoveDone,nullptr));
-}
-
-
->>>>>>> 00bb282b9d9d6f84f30ac9681b727cd84330efbf
 
 
 

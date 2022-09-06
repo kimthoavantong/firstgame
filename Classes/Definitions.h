@@ -21,10 +21,7 @@
 #define GamePlayScene_Sprite_QuaiShip2 "ship2.png"
 #define GamePlayScene_BonusItem_Dame "bonusitems/Damage_Bonus.png"
 #define GamePlayScene_BonusItem_HP "bonusitems/HP_Bonus.png"
-<<<<<<< HEAD
 #define GamePlayScene_Boom1	"Bomb3Idle1.png"
-=======
->>>>>>> 00bb282b9d9d6f84f30ac9681b727cd84330efbf
 
 // define Background
 #define BackGround_full_one "BackGround2.png"
