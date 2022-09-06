@@ -5,7 +5,7 @@
 #include "Definitions.h"
 #include "GamePlayScene.h"
 
-
+using namespace CocosDenshion;
 
 USING_NS_CC;
 
@@ -35,7 +35,7 @@ bool HelloWorld::init()
     backGround->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(backGround,-1);
 
-
+    SimpleAudioEngine::getInstance()->preloadEffect(Music_Effect_Click);
 
     HelloWorld::addButtonPlay();
     HelloWorld::addButtonShop();
@@ -51,13 +51,20 @@ void HelloWorld::addButtonPlay()
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
     buttonPlay = cocos2d::ui::Button::create(HelloWorld_Sprite_ButtonPlay);
+    buttonPlay->setScale(1);
     buttonPlay->setPosition(Vec2(visibleSize.width / 2 + origin.x,origin.y + visibleSize.height * 3 / 4));
-    this->addChild(buttonPlay, 1);
-    buttonPlay->addTouchEventListener([&](Ref* sender, cocos2d::ui::Widget::TouchEventType type)
+    buttonPlay->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type)
         {
+            
             switch (type)
             {
+            case cocos2d::ui::Widget::TouchEventType::BEGAN:
+            {
+                SimpleAudioEngine::getInstance()->playEffect(Music_Effect_Click, false);
+                break;
+            }
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
                 auto moveSceneGamePlayScene = GamePlayScene::createPhysicsWorld();
@@ -68,6 +75,7 @@ void HelloWorld::addButtonPlay()
                 break;
             }
         });
+    this->addChild(buttonPlay, 1);
 }
 void HelloWorld::addButtonShop()
 {
@@ -81,9 +89,12 @@ void HelloWorld::addButtonShop()
         {
             switch (type)
             {
+            case cocos2d::ui::Widget::TouchEventType::BEGAN:
+            {
+                SimpleAudioEngine::getInstance()->playEffect(Music_Effect_Click, false);
+            }
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
-               
                 break;
             }
             default:
@@ -122,6 +133,11 @@ void HelloWorld::addButtonQuick()
         {
             switch (type)
             {
+            case cocos2d::ui::Widget::TouchEventType::BEGAN:
+            {
+                SimpleAudioEngine::getInstance()->playEffect(Music_Effect_Click, false);
+                break;
+            }
             case cocos2d::ui::Widget::TouchEventType::ENDED:
             {
                 Director::getInstance()->end();
